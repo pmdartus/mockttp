@@ -9,7 +9,6 @@ import portfinder = require("portfinder");
 import connect = require("connect");
 import { v4 as uuid } from "uuid";
 import cors = require("cors");
-import now = require("performance-now");
 import WebSocket = require("ws");
 
 import {
@@ -40,7 +39,7 @@ import { createComboServer } from "./http-combo-server";
 import { filter } from "../util/promise";
 import { Mutable } from "../util/type-utils";
 import { ErrorLike, isErrorLike } from "../util/error";
-import { makePropertyWritable } from "../util/util";
+import { makePropertyWritable, performance } from "../util/util";
 
 import { buildSocketEventData, isSocketLoop, resetOrDestroy } from "../util/socket-util";
 import {
@@ -379,7 +378,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
                 content,
                 isBinary,
 
-                eventTimestamp: now(),
+                eventTimestamp: performance.now(),
                 timingEvents: request.timingEvents,
                 tags: request.tags
             } as WebSocketMessage);
@@ -428,12 +427,12 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
                 httpResponse.tags = request.tags;
 
                 httpResponse.timingEvents = request.timingEvents;
-                (httpResponse.timingEvents as TimingEvents).responseSentTimestamp = now();
+                (httpResponse.timingEvents as TimingEvents).responseSentTimestamp = performance.now();
 
                 this.announceResponseAsync(httpResponse);
             } else {
                 // Connect closed during upgrade, before we responded:
-                request.timingEvents.abortedTimestamp = now();
+                request.timingEvents.abortedTimestamp = performance.now();
                 this.announceAbortAsync(request);
             }
         });
@@ -450,7 +449,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
             httpResponse.tags = request.tags;
 
             httpResponse.timingEvents = request.timingEvents;
-            (httpResponse.timingEvents as TimingEvents).wsAcceptedTimestamp = now();
+            (httpResponse.timingEvents as TimingEvents).wsAcceptedTimestamp = performance.now();
 
             this.announceWebSocketUpgradeAsync(httpResponse);
 
@@ -472,10 +471,10 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
             ws.on('close', (closeCode, closeReason) => {
                 if (closeCode === 1006) {
                     // Not a clean close!
-                    request.timingEvents.abortedTimestamp = now();
+                    request.timingEvents.abortedTimestamp = performance.now();
                     this.announceAbortAsync(request);
                 } else {
-                    request.timingEvents.wsClosedTimestamp = now();
+                    request.timingEvents.wsClosedTimestamp = performance.now();
 
                     this.announceWebSocketCloseAsync(
                         request,
@@ -571,7 +570,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
         }
 
         const id = uuid();
-        const timingEvents = { startTime: Date.now(), startTimestamp: now() };
+        const timingEvents = { startTime: Date.now(), startTimestamp: performance.now() };
         const tags: string[] = [];
 
         const rawHeaders = pairFlatRawHeaders(req.rawHeaders);
@@ -600,7 +599,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
         const abort = (error?: Error) => {
             if (result === null) {
                 result = 'aborted';
-                request.timingEvents.abortedTimestamp = now();
+                request.timingEvents.abortedTimestamp = performance.now();
                 this.announceAbortAsync(request, error);
             }
         }
@@ -897,7 +896,7 @@ ${await this.suggestRule(request)}`
             const commonParams = {
                 id: uuid(),
                 tags: [`client-error:${error.code || 'UNKNOWN'}`],
-                timingEvents: { startTime: Date.now(), startTimestamp: now() } as TimingEvents
+                timingEvents: { startTime: Date.now(), startTimestamp: performance.now() } as TimingEvents
             };
 
             // Initially _httpMessage is undefined, until at least one request has been parsed.
@@ -962,11 +961,11 @@ ${await this.suggestRule(request)}`
                 // Wait for the write to complete before we destroy() below
                 await new Promise((resolve) => socket.write(responseBuffer, resolve));
 
-                commonParams.timingEvents.headersSentTimestamp = now();
-                commonParams.timingEvents.responseSentTimestamp = now();
+                commonParams.timingEvents.headersSentTimestamp = performance.now();
+                commonParams.timingEvents.responseSentTimestamp = performance.now();
             } else {
                 response = 'aborted';
-                commonParams.timingEvents.abortedTimestamp = now();
+                commonParams.timingEvents.abortedTimestamp = performance.now();
             }
 
             this.announceClientErrorAsync(socket, { errorCode, request, response });
@@ -1000,7 +999,7 @@ ${await this.suggestRule(request)}`
                 httpVersion: '2',
 
                 // Best guesses:
-                timingEvents: { startTime: Date.now(), startTimestamp: now() } as TimingEvents,
+                timingEvents: { startTime: Date.now(), startTimestamp: performance.now() } as TimingEvents,
                 protocol: isTLS ? "https" : "http",
                 url: isTLS ? `https://${
                     (socket as tls.TLSSocket).servername // Use the hostname from SNI
@@ -1056,7 +1055,7 @@ ${await this.suggestRule(request)}`
                     ...eventData,
                     timingEvents: {
                         ...eventData.timingEvents,
-                        disconnectedTimestamp: now()
+                        disconnectedTimestamp: performance.now()
                     }
                 });
             });

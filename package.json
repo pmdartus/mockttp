@@ -46,6 +46,7 @@
     "http2": false,
     "http2-wrapper": false,
     "cross-fetch": false,
+    "perf_hooks": false,
     "cacheable-lookup": false,
     "@httptoolkit/proxy-agent": false
   },
@@ -194,7 +195,6 @@
     "node-forge": "^1.2.1",
     "pac-proxy-agent": "^5.0.0",
     "parse-multipart-data": "^1.4.0",
-    "performance-now": "^2.1.0",
     "portfinder": "1.0.28",
     "read-tls-client-hello": "^1.0.0",
     "socks-proxy-agent": "^7.0.0",

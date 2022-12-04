@@ -1,5 +1,4 @@
 import _ = require('lodash');
-import now = require("performance-now");
 import net = require('net');
 import tls = require('tls');
 import http = require('http');
@@ -15,7 +14,7 @@ import {
 
 import { TlsHandshakeFailure } from '../types';
 import { getCA } from '../util/tls';
-import { delay } from '../util/util';
+import { delay, performance } from '../util/util';
 import {
     getParentSocket,
     buildSocketTimingInfo,
@@ -127,7 +126,7 @@ function buildTlsError(
     const eventData = buildSocketEventData(socket) as TlsHandshakeFailure;
 
     eventData.failureCause = cause;
-    eventData.timingEvents.failureTimestamp = now();
+    eventData.timingEvents.failureTimestamp = performance.now();
 
     return eventData;
 }
@@ -210,7 +209,7 @@ export async function createComboServer(
             socket.__timingInfo = buildSocketTimingInfo();
         }
 
-        socket.__timingInfo!.tlsConnectedTimestamp = now();
+        socket.__timingInfo!.tlsConnectedTimestamp = performance.now();
 
         socket.__lastHopEncrypted = true;
         ifTlsDropped(socket, () => {
@@ -257,7 +256,7 @@ export async function createComboServer(
         if (options.debug) console.log(`Proxying HTTP/1 CONNECT to ${connectUrl}`);
 
         socket.write('HTTP/' + req.httpVersion + ' 200 OK\r\n\r\n', 'utf-8', () => {
-            socket.__timingInfo!.tunnelSetupTimestamp = now();
+            socket.__timingInfo!.tunnelSetupTimestamp = performance.now();
             socket.__lastHopConnectAddress = connectUrl;
             server.emit('connection', socket);
         });

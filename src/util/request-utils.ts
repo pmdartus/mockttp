@@ -5,7 +5,6 @@ import * as http from 'http';
 import * as http2 from 'http2';
 import * as stream from 'stream';
 import * as querystring from 'querystring';
-import now = require("performance-now");
 import * as url from 'url';
 import type { SUPPORTED_ENCODING } from 'http-encoding';
 
@@ -22,7 +21,7 @@ import {
     RawHeaders
 } from "../types";
 
-import { nthIndexOf } from './util';
+import { nthIndexOf, performance } from './util';
 import {
     bufferThenStream,
     bufferToStream,
@@ -294,7 +293,8 @@ export function buildInitiatedRequest(request: OngoingRequest): InitiatedRequest
  */
 export async function waitForCompletedRequest(request: OngoingRequest): Promise<CompletedRequest> {
     const body = await waitForBody(request.body, request.headers);
-    request.timingEvents.bodyReceivedTimestamp = request.timingEvents.bodyReceivedTimestamp || now();
+    request.timingEvents.bodyReceivedTimestamp = request.timingEvents.bodyReceivedTimestamp || 
+        performance.now();
 
     const requestData = buildInitiatedRequest(request);
     return { ...requestData, body };
@@ -326,7 +326,7 @@ export function trackResponse(
 
     trackedResponse.writeHead = function (this: typeof trackedResponse, ...args: any) {
         if (!timingEvents.headersSentTimestamp) {
-            timingEvents.headersSentTimestamp = now();
+            timingEvents.headersSentTimestamp = performance.now();
         }
 
         // HTTP/2 responses shouldn't have a status message:
@@ -424,7 +424,8 @@ export async function waitForCompletedResponse(
     if ('headers' in response) return response;
 
     const body = await waitForBody(response.body, response.getHeaders());
-    response.timingEvents.responseSentTimestamp = response.timingEvents.responseSentTimestamp || now();
+    response.timingEvents.responseSentTimestamp = response.timingEvents.responseSentTimestamp || 
+        performance.now();
 
     const completedResponse: CompletedResponse = _(response).pick([
         'id',

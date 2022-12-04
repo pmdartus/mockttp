@@ -32,6 +32,10 @@ export const isWorker = typeof WorkerGlobalScope !== 'undefined' && self instanc
 export const isWeb = typeof Window !== 'undefined' && self instanceof Window;
 export const isNode = !isWorker && !isWeb && typeof process === 'object' && process.version;
 
+// `performance` was added to the Node.js global scope in Node.js 16.
+// Remove this check when we drop support for Node.js 14.
+export const performance = isNode ? require('perf_hooks').performance : globalThis.performance;
+
 export const makePropertyWritable = <T>(obj: T, property: keyof T) =>
     Object.defineProperty(obj, property, {
         value: obj[property],

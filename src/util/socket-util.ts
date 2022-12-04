@@ -1,11 +1,10 @@
 import * as _ from 'lodash';
-import now = require("performance-now");
 import * as os from 'os';
 import * as net from 'net';
 import * as tls from 'tls';
 import * as http2 from 'http2';
 
-import { isNode } from './util';
+import { isNode, performance } from './util';
 import { OngoingRequest, TlsConnectionEvent } from '../types';
 
 // Test if a local port for a given interface (IPv4/6) is currently in use
@@ -185,5 +184,5 @@ export function buildSocketEventData(socket: net.Socket & Partial<tls.TLSSocket>
 }
 
 export function buildSocketTimingInfo(): Required<net.Socket>['__timingInfo'] {
-    return { initialSocket: Date.now(), initialSocketTimestamp: now() };
+    return { initialSocket: Date.now(), initialSocketTimestamp: performance.now() };
 }
