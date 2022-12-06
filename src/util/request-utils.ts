@@ -111,7 +111,7 @@ export function dropDefaultHeaders(response: OngoingResponse) {
     );
 }
 
-export function validateHeader(name: string, value: string | string[]): boolean {
+export function validateHeader(name: string, value: string): boolean {
     try {
         http.validateHeaderName(name);
         http.validateHeaderValue(name, value);

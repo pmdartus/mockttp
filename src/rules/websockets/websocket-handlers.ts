@@ -289,7 +289,7 @@ export class PassThroughWebSocketHandler extends PassThroughWebSocketHandlerDefi
             if (socket.__lastHopEncrypted !== undefined) {
                 protocol = socket.__lastHopEncrypted ? 'wss' : 'ws';
             } else {
-                protocol = reqMessage.connection.encrypted ? 'wss' : 'ws';
+                protocol = reqMessage.connection instanceof tls.TLSSocket ? 'wss' : 'ws';
             }
 
             const wsUrl = `${protocol}://${hostname}${port ? ':' + port : ''}${path}`;

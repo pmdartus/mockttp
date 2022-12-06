@@ -20,10 +20,6 @@ declare module "net" {
         // preceeding tunneling steps.
         __tlsMetadata?: {}; // Can't ref Mockttp real type here
 
-        // Normally only defined on TLSSocket, but useful to explicitly include here
-        // Undefined on plain HTTP, 'true' on TLSSocket.
-        encrypted?: boolean;
-
         // If there's a client error being sent, we track the corresponding packet
         // data on the socket, so that when it fires repeatedly we can combine them
         // into a single response & error event.
@@ -89,12 +85,6 @@ declare module "_stream_wrap" {
     }
 
     export = SocketWrapper;
-}
-
-declare module "http" {
-    // Two missing methods from the official types:
-    export function validateHeaderName(name: string): void;
-    export function validateHeaderValue(name: string, value: unknown): void;
 }
 
 declare module "http2" {
