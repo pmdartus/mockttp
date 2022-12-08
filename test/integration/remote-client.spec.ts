@@ -62,7 +62,7 @@ nodeOnly(() => {
 
             it("should successfully mock requests with live callbacks", async () => {
                 let count = 0;
-                await remoteServer.forGet("/mocked-endpoint").thenCallback((req) => {
+                await remoteServer.forGet("/mocked-endpoint").thenCallback(() => {
                     return { statusCode: 200, body: `calls: ${++count}` }
                 });
 
@@ -351,20 +351,15 @@ nodeOnly(() => {
                     // Remote server sends fixed response:
                     const targetEndpoint = await targetServer.forAnyRequest().thenReply(200, "Remote server says hi!");
 
-                    let firstCallbackCalled = false;
-                    let secondCallbackCalled = false;
-
                     // Mockttp forwards requests via our intermediate proxy (configured with a remote client + callback)
                     await remoteServer.forAnyRequest().thenPassThrough({
                         proxyConfig: [
                             ({ hostname }) => {
                                 expect(hostname).to.equal('localhost');
-                                firstCallbackCalled = true;
                                 return undefined;
                             },
                             ({ hostname }) => {
                                 expect(hostname).to.equal('localhost');
-                                secondCallbackCalled = true;
                                 return { proxyUrl: targetServer.url }
                             },
                             () => {

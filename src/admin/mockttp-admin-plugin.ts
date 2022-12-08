@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { Duplex } from 'stream';
 
 import type { AdminPlugin } from './admin-plugin-types';

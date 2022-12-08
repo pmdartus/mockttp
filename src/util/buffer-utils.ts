@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as stream from 'stream';
 
 import { isNode } from './util';

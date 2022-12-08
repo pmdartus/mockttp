@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { getLocal } from "../..";
-import { expect, nodeOnly, isNode } from '../test-utils';
+import { expect, nodeOnly } from '../test-utils';
 
 describe("Port selection", function () {
 

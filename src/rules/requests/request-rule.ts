@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { v4 as uuid } from "uuid";
 
 import { OngoingRequest, CompletedRequest, OngoingResponse, Explainable, RulePriority } from "../../types";

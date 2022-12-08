@@ -576,9 +576,9 @@ export class AdminServer<Plugins extends { [key: string]: AdminPlugin<any, any> 
             Void: new GraphQLScalarType({
                 name: 'Void',
                 description: 'Nothing at all',
-                serialize: (value: any) => null,
-                parseValue: (input: string): any => null,
-                parseLiteral: (): any => { throw new Error('Void literals are not supported') }
+                serialize: () => null,
+                parseValue: () => null,
+                parseLiteral: () => { throw new Error('Void literals are not supported') }
             }),
 
             Buffer: new GraphQLScalarType({

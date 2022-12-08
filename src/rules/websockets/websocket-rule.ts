@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { v4 as uuid } from "uuid";
 import * as net from 'net';
 import * as http from 'http';

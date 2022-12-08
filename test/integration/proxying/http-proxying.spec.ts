@@ -286,7 +286,7 @@ nodeOnly(() => {
                 await remoteServer.forGet('/endpoint').thenReply(200, '/endpoint');
 
                 await server.forGet(remoteServer.urlFor("/")).thenPassThrough({
-                    beforeRequest: (req) => {
+                    beforeRequest: () => {
                         return { url: '/endpoint' };
                     }
                 });

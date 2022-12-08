@@ -1,3 +1,6 @@
+/* eslint-env node */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const tmp = require('tmp');
 tmp.setGracefulCleanup();
 

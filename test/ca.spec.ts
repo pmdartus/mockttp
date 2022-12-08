@@ -51,7 +51,7 @@ nodeOnly(() => {
             const caCertificate = await caCertificatePromise;
             const ca = new CA({ key: caCertificate.key, cert: caCertificate.cert, keyLength: 1024 });
 
-            const { cert, key } = ca.generateCertificate('localhost');
+            ca.generateCertificate('localhost');
 
             expect(caCertificate.cert.length).to.be.greaterThan(1000);
             expect(caCertificate.cert.split('\r\n')[0]).to.equal('-----BEGIN CERTIFICATE-----');

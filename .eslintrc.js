@@ -11,6 +11,8 @@ module.exports = {
     ],
 
     rules: {
+        "@typescript-eslint/no-unused-vars": ["error", { "args": "after-used" }],
+
         // Suggestions
         "@typescript-eslint/no-empty-function": "off",
 

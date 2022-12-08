@@ -4,7 +4,6 @@ import * as zlib from 'zlib';
 
 import {
     getLocal,
-    InitiatedRequest,
     CompletedRequest,
     CompletedResponse,
     Mockttp,
@@ -415,7 +414,7 @@ describe("Abort subscriptions", () => {
     nodeOnly(() => {
         it("should be sent when a request is aborted before completion", async () => {
             let wasRequestSeen = false;
-            await server.on('request', (r) => { wasRequestSeen = true; });
+            await server.on('request', () => { wasRequestSeen = true; });
 
             const seenAbortPromise = getDeferred<AbortedRequest>();
             await server.on('abort', (r) => seenAbortPromise.resolve(r));
@@ -432,7 +431,7 @@ describe("Abort subscriptions", () => {
 
         describe("given a server that closes connections", () => {
 
-            const badServer = new http.Server((req, res) => {
+            const badServer = new http.Server((req) => {
                 // Forcefully close the socket with no response
                 req.socket!.destroy();
             });
@@ -508,7 +507,7 @@ describe("Abort subscriptions", () => {
         const seenResponsePromise = getDeferred<CompletedResponse>();
         await server.on('response', (r) => seenResponsePromise.resolve(r));
 
-        await server.forPost('/mocked-endpoint').thenCallback((req) => delay(500).then(() => ({})));
+        await server.forPost('/mocked-endpoint').thenCallback(() => delay(500).then(() => ({})));
 
         const abortable = makeAbortableRequest(server, '/mocked-endpoint');
         nodeOnly(() => (abortable as http.ClientRequest).end('request body'));

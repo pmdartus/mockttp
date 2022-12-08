@@ -12,7 +12,6 @@ import {
     sendRawRequest,
     watchForEvent,
     TOO_LONG_HEADER_VALUE,
-    isNode,
     openRawTlsSocket
 } from "../../test-utils";
 import { ClientError } from "../../../dist/types";

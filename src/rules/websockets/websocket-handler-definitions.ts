@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as url from 'url';
 import { stripIndent } from 'common-tags';
 

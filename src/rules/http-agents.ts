@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as url from 'url';
 import * as http from 'http';
 import * as https from 'https';

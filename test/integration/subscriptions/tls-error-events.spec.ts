@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import HttpsProxyAgent = require('https-proxy-agent');
 import * as semver from 'semver';
 

@@ -1,5 +1,3 @@
-import * as _ from "lodash";
-
 import { getLocal } from "../../..";
 import { expect, fetch } from "../../test-utils";
 
