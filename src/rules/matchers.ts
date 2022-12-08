@@ -197,7 +197,7 @@ export class SimplePathMatcher extends Serializable implements RequestMatcher {
 
         if (!this.path) throw new Error('Invalid URL: URL to match must not be empty');
 
-        let { search, query } = url.parse(this.path, true);
+        const { search, query } = url.parse(this.path, true);
         if (search) {
             throw new Error(oneLine`
                 Tried to match a path that contained a query (${search}).
@@ -319,7 +319,7 @@ export class QueryMatcher extends Serializable implements RequestMatcher {
     }
 
     matches(request: OngoingRequest) {
-        let { query } = url.parse(request.url, true);
+        const { query } = url.parse(request.url, true);
         return _.isMatch(query, this.queryObject);
     }
 
@@ -440,7 +440,7 @@ export class RegexBodyMatcher extends Serializable implements RequestMatcher {
     }
 
     async matches(request: OngoingRequest) {
-        let bodyMatcher = new RegExp(this.regexString);
+        const bodyMatcher = new RegExp(this.regexString);
         return bodyMatcher.test(await request.body.asText());
     }
 

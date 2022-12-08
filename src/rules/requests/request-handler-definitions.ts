@@ -340,7 +340,7 @@ export interface SerializedStreamHandlerData {
     type: string;
     status: number;
     headers?: Headers;
-};
+}
 
 interface StreamHandlerMessage {
     event: 'data' | 'end' | 'close' | 'error';
@@ -379,7 +379,7 @@ export class StreamHandlerDefinition extends Serializable implements RequestHand
         const serializationStream = new Transform({
             objectMode: true,
             transform: function (this: Transform, chunk, _encoding, callback) {
-                let serializedEventData: StreamHandlerEventMessage | false =
+                const serializedEventData: StreamHandlerEventMessage | false =
                     _.isString(chunk) ? { type: 'string', value: chunk } :
                     _.isBuffer(chunk) ? { type: 'buffer', value: chunk.toString('base64') } :
                     (_.isArrayBuffer(chunk) || _.isTypedArray(chunk)) ? { type: 'arraybuffer', value: encodeBase64(<any> chunk) } :
@@ -981,23 +981,23 @@ export class PassThroughHandlerDefinition extends Serializable implements Reques
             transformRequest: this.transformRequest ? {
                 ...this.transformRequest,
                 // Body is always serialized as a base64 buffer:
-                replaceBody: !!this.transformRequest?.replaceBody
+                replaceBody: this.transformRequest?.replaceBody
                     ? serializeBuffer(asBuffer(this.transformRequest.replaceBody))
                     : undefined,
                 // Update objects need to capture undefined & null as distict values:
-                updateHeaders: !!this.transformRequest?.updateHeaders
+                updateHeaders: this.transformRequest?.updateHeaders
                     ? JSON.stringify(
                         this.transformRequest.updateHeaders,
                         (k, v) => v === undefined ? SERIALIZED_OMIT : v
                     )
                     : undefined,
-                updateJsonBody: !!this.transformRequest?.updateJsonBody
+                updateJsonBody: this.transformRequest?.updateJsonBody
                     ? JSON.stringify(
                         this.transformRequest.updateJsonBody,
                         (k, v) => v === undefined ? SERIALIZED_OMIT : v
                     )
                     : undefined,
-                matchReplaceBody: !!this.transformRequest?.matchReplaceBody
+                matchReplaceBody: this.transformRequest?.matchReplaceBody
                     ? this.transformRequest.matchReplaceBody.map(([match, result]) =>
                         [
                             _.isRegExp(match)
@@ -1011,23 +1011,23 @@ export class PassThroughHandlerDefinition extends Serializable implements Reques
             transformResponse: this.transformResponse ? {
                 ...this.transformResponse,
                 // Body is always serialized as a base64 buffer:
-                replaceBody: !!this.transformResponse?.replaceBody
+                replaceBody: this.transformResponse?.replaceBody
                     ? serializeBuffer(asBuffer(this.transformResponse.replaceBody))
                     : undefined,
                 // Update objects need to capture undefined & null as distict values:
-                updateHeaders: !!this.transformResponse?.updateHeaders
+                updateHeaders: this.transformResponse?.updateHeaders
                     ? JSON.stringify(
                         this.transformResponse.updateHeaders,
                         (k, v) => v === undefined ? SERIALIZED_OMIT : v
                     )
                     : undefined,
-                updateJsonBody: !!this.transformResponse?.updateJsonBody
+                updateJsonBody: this.transformResponse?.updateJsonBody
                     ? JSON.stringify(
                         this.transformResponse.updateJsonBody,
                         (k, v) => v === undefined ? SERIALIZED_OMIT : v
                     )
                     : undefined,
-                matchReplaceBody: !!this.transformResponse?.matchReplaceBody
+                matchReplaceBody: this.transformResponse?.matchReplaceBody
                     ? this.transformResponse.matchReplaceBody.map(([match, result]) =>
                         [
                             _.isRegExp(match)

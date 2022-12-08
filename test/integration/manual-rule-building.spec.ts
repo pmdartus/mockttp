@@ -5,7 +5,7 @@ import { getLocal, matchers, requestHandlers, webSocketHandlers } from "../..";
 import { expect, fetch } from "../test-utils";
 
 describe("Mockttp rule building", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -16,8 +16,8 @@ describe("Mockttp rule building", function () {
             handler: new requestHandlers.SimpleHandler(200, '', 'mock response'),
         });
 
-        let response = await fetch(server.urlFor('/endpoint'));
-        let responseText = await response.text();
+        const response = await fetch(server.urlFor('/endpoint'));
+        const responseText = await response.text();
 
         expect(responseText).to.include('mock response');
     });
@@ -44,10 +44,10 @@ describe("Mockttp rule building", function () {
             handler: new requestHandlers.SimpleHandler(200, '', 'second mock response'),
         });
 
-        let firstResponse = await fetch(server.urlFor('/endpoint'));
-        let firstResponseText = await firstResponse.text();
-        let secondResponse = await fetch(server.urlFor('/endpoint'));
-        let secondResponseText = await secondResponse.text();
+        const firstResponse = await fetch(server.urlFor('/endpoint'));
+        const firstResponseText = await firstResponse.text();
+        const secondResponse = await fetch(server.urlFor('/endpoint'));
+        const secondResponseText = await secondResponse.text();
 
         expect(firstResponseText).to.include('first mock response');
         expect(secondResponseText).to.include('second mock response');
@@ -63,8 +63,8 @@ describe("Mockttp rule building", function () {
             handler: new requestHandlers.SimpleHandler(200, '', 'replacement mock response')
         });
 
-        let firstResponse = await fetch(server.urlFor('/endpoint'));
-        let firstResponseText = await firstResponse.text();
+        const firstResponse = await fetch(server.urlFor('/endpoint'));
+        const firstResponseText = await firstResponse.text();
 
         expect(firstResponseText).to.include('replacement mock response');
     });

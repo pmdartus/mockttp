@@ -4,7 +4,7 @@ import { expect, fetch, isNode } from "../../test-utils";
 
 describe("HTTP mock rule handling", function () {
 
-    let server = getLocal({
+    const server = getLocal({
         cors: isNode
             ? false
             : { exposedHeaders: '*' }
@@ -18,7 +18,7 @@ describe("HTTP mock rule handling", function () {
             path.join(__dirname, '..', '..', 'fixtures', 'response-file.txt')
         );
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(response.headers.get('Transfer-Encoding')).to.equal('chunked');
@@ -32,7 +32,7 @@ describe("HTTP mock rule handling", function () {
             { "Content-Type": "text/mocked" }
         );
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(response.statusText).to.equal("mock status");
@@ -59,7 +59,7 @@ describe("HTTP mock rule handling", function () {
             path.join(__dirname, 'non-existent-file.txt')
         );
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(500);
         expect(await response.text()).to.include('no such file or directory');

@@ -4,7 +4,7 @@ import { getLocal } from "../../..";
 import { expect, fetch, browserOnly } from "../../test-utils";
 
 describe("Method & path request matching", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -34,7 +34,7 @@ responses by hand.`);
         it(`should match ${methodName.toUpperCase()} requests`, async () => {
             await server[`for${methodName}`]('/').thenReply(200, methodName);
 
-            let result = await fetch(server.url, {
+            const result = await fetch(server.url, {
                 method: methodName.toUpperCase(),
             });
 
@@ -50,7 +50,7 @@ responses by hand.`);
     it("should match requests for a matching relative path", async () => {
         await server.forGet('/').thenReply(200, 'Fake file');
 
-        let result = await fetch(server.urlFor('/'));
+        const result = await fetch(server.urlFor('/'));
 
         await expect(result).to.have.responseText('Fake file');
     });
@@ -65,7 +65,7 @@ responses by hand.`);
     it("should match requests for a matching absolute url", async () => {
         await server.forGet(`http://localhost:${server.port}/file.txt`).thenReply(200, 'Fake file');
 
-        let result = await fetch(server.urlFor('/file.txt'));
+        const result = await fetch(server.urlFor('/file.txt'));
 
         await expect(result).to.have.responseText('Fake file');
     });
@@ -73,7 +73,7 @@ responses by hand.`);
     it("should match requests for a matching absolute protocol-independent url", async () => {
         await server.forGet(`localhost:${server.port}/file.txt`).thenReply(200, 'Fake file');
 
-        let result = await fetch(server.urlFor('/file.txt'));
+        const result = await fetch(server.urlFor('/file.txt'));
 
         await expect(result).to.have.responseText('Fake file');
     });
@@ -81,7 +81,7 @@ responses by hand.`);
     it("should match requests for a matching absolute URL regardless of a missing trailing slash", async () => {
         await server.forGet(`http://localhost:${server.port}`).thenReply(200, 'Root response');
 
-        let result = await fetch(server.urlFor('/'));
+        const result = await fetch(server.urlFor('/'));
 
         await expect(result).to.have.responseText('Root response');
     });
@@ -91,7 +91,7 @@ responses by hand.`);
 
         // WHATWG URL parses //abc as an absolute URL with no protocol. This can cause problems. We need to
         // ensure we always treat it as relative, and correctly use the host header for the rest:
-        let result = await fetch(server.urlFor('//abc'));
+        const result = await fetch(server.urlFor('//abc'));
 
         await expect(result).to.have.responseText('//abc response');
     });
@@ -99,7 +99,7 @@ responses by hand.`);
     it("should regex match requests for a matching path", async () => {
         await server.forGet(/^\/matching-\w+.txt/).thenReply(200, 'Fake file');
 
-        let result = await fetch(server.urlFor('/matching-file.txt'));
+        const result = await fetch(server.urlFor('/matching-file.txt'));
 
         await expect(result).to.have.responseText('Fake file');
     });
@@ -107,7 +107,7 @@ responses by hand.`);
     it("should regex match requests for a URL with trailing slashes included", async () => {
         await server.forGet(/localhost:\d+\/$/).thenReply(200, 'Root response');
 
-        let result = await fetch(server.urlFor('/'));
+        const result = await fetch(server.urlFor('/'));
 
         await expect(result).to.have.responseText('Root response');
     });
@@ -115,7 +115,7 @@ responses by hand.`);
     it("should regex match requests for a matching full URL", async () => {
         await server.forGet(/localhost:\d+\/[\w\-]+.txt/).thenReply(200, 'Fake file');
 
-        let result = await fetch(server.urlFor('/matching-file.txt'));
+        const result = await fetch(server.urlFor('/matching-file.txt'));
 
         await expect(result).to.have.responseText('Fake file');
     });
@@ -123,7 +123,7 @@ responses by hand.`);
     it("should reject requests for the wrong path", async () => {
         await server.forGet("/specific-endpoint").thenReply(200, "mocked data");
 
-        let result = await fetch(server.url);
+        const result = await fetch(server.url);
 
         expect(result.status).to.equal(503);
     });
@@ -131,7 +131,7 @@ responses by hand.`);
     it("should reject requests that don't match a regex path", async () => {
         await server.forGet(/.*.txt/).thenReply(200, 'Fake file');
 
-        let result = await fetch(server.urlFor('/non-matching-file.css'));
+        const result = await fetch(server.urlFor('/non-matching-file.css'));
 
         expect(result.status).to.equal(503);
     });
@@ -139,7 +139,7 @@ responses by hand.`);
     it("should match requests ignoring the query string", async () => {
         await server.forGet('/path').thenReply(200, 'Matched path');
 
-        let result = await fetch(server.urlFor('/path?a=b'));
+        const result = await fetch(server.urlFor('/path?a=b'));
 
         await expect(result).to.have.responseText('Matched path');
     });

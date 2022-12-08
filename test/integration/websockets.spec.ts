@@ -21,7 +21,7 @@ import { delay } from '../../src/util/util';
 browserOnly(() => {
     describe('Websocket requests', function() {
 
-        let mockServer = getLocal({
+        const mockServer = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'
@@ -56,7 +56,7 @@ nodeOnly(() => {
     describe('Websockets', function() {
         this.timeout(1000);
 
-        let mockServer = getLocal({
+        const mockServer = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'

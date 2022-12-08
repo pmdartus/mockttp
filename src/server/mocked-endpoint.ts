@@ -8,7 +8,7 @@ export class ServerMockedEndpoint implements MockedEndpoint {
 
     constructor(private rule: RequestRule | WebSocketRule) {
         this.getSeenRequests.bind(this);
-    };
+    }
 
     get id() {
         return this.rule.id;

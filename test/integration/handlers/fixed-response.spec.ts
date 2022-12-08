@@ -3,7 +3,7 @@ import { expect, fetch, isNode } from "../../test-utils";
 
 describe("Simple fixed response handler", function () {
 
-    let server = getLocal({
+    const server = getLocal({
         cors: isNode
             ? false
             : { exposedHeaders: '*' }
@@ -15,7 +15,7 @@ describe("Simple fixed response handler", function () {
     it("should allow mocking the status code alone", async () => {
         await server.forGet("/mocked-endpoint").thenReply(204);
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(await response.status).to.equal(204);
         expect(await response.text()).to.equal("");
@@ -24,7 +24,7 @@ describe("Simple fixed response handler", function () {
     it("should allow mocking the status code & body", async () => {
         await server.forGet("/mocked-endpoint").thenReply(200, "mocked data");
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(await response.text()).to.equal("mocked data");
     });
@@ -32,7 +32,7 @@ describe("Simple fixed response handler", function () {
     it("should set default headers when none are provided", async () => {
         await server.forGet("/mocked-endpoint").thenReply(200, "mocked data");
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(await response.text()).to.equal("mocked data");
         expect(response.headers.get('Date')).to.match(/^\w+, \d+ \w+ \d+ \d\d:\d\d:\d\d \w+$/);
@@ -44,7 +44,7 @@ describe("Simple fixed response handler", function () {
             "Content-Type": "text/mocked"
         });
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(response.statusText).to.equal('OK');
@@ -61,7 +61,7 @@ describe("Simple fixed response handler", function () {
             "Content-Type": "text/mocked"
         });
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(response.statusText).to.equal('mock status');
@@ -86,7 +86,7 @@ describe("Simple fixed response handler", function () {
     it("should allow mocking a binary body with a buffer", async () => {
         await server.forGet("/mocked-endpoint").thenReply(200, Buffer.from([72, 105]));
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(await response.text()).to.equal('Hi');
     });
@@ -97,7 +97,7 @@ describe("Simple fixed response handler", function () {
         const bodyBuffer = Buffer.alloc(1024 * 1024 * 10, 'A'.charCodeAt(0));
         await server.forGet("/mocked-endpoint").thenReply(200, bodyBuffer);
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         const responseText = await response.text();
         expect(responseText.length).to.equal(1024 * 1024 * 10);

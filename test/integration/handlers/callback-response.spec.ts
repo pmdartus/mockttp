@@ -4,7 +4,7 @@ import { expect, fetch, isNode, isWeb, headersToObject } from "../../test-utils"
 
 describe("Callback response handlers", function () {
 
-    let server = getLocal({
+    const server = getLocal({
         cors: isNode
             ? false
             : { exposedHeaders: '*' }
@@ -18,7 +18,7 @@ describe("Callback response handlers", function () {
             return { statusCode: 204, statusMessage: 'all good' }
         });
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(204);
         expect(response.statusText).to.equal('all good');
@@ -33,7 +33,7 @@ describe("Callback response handlers", function () {
             return { statusCode: 200, body: 'response body' }
         });
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(await response.text()).to.equal("response body");
@@ -47,7 +47,7 @@ describe("Callback response handlers", function () {
             return { statusCode: 200, headers: { 'mock-header': 'set' } }
         });
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(headersToObject(response.headers)).to.deep.equal({
@@ -65,7 +65,7 @@ describe("Callback response handlers", function () {
             return { statusCode: 200, headers: { ':status': '200' } }
         })
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(500);
         expect(await response.text()).to.equal("Error: Cannot set custom :status pseudoheader values");
@@ -78,7 +78,7 @@ describe("Callback response handlers", function () {
             json: { myVar: "foo" }
         }));
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(201);
         expect(response.statusText).to.equal('all good');
@@ -93,7 +93,7 @@ describe("Callback response handlers", function () {
             body: 'response body'
         }));
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(Object.fromEntries([...response.headers as any])).to.include({
@@ -111,7 +111,7 @@ describe("Callback response handlers", function () {
             }
         });
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(200);
         expect(Object.fromEntries([...response.headers as any])).to.include({
@@ -125,7 +125,7 @@ describe("Callback response handlers", function () {
             return 'close';
         });
 
-        let response: Response | Error = await fetch(server.urlFor('/mocked-endpoint'))
+        const response: Response | Error = await fetch(server.urlFor('/mocked-endpoint'))
             .catch((e) => e);
 
         expect(response).to.be.instanceOf(Error);
@@ -141,7 +141,7 @@ describe("Callback response handlers", function () {
             throw new Error('Oh no!');
         });
 
-        let response = await fetch(server.urlFor("/mocked-endpoint"));
+        const response = await fetch(server.urlFor("/mocked-endpoint"));
 
         expect(response.status).to.equal(500);
     });

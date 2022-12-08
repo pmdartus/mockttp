@@ -2,7 +2,7 @@ import { getLocal } from "../../..";
 import { expect, fetch, Headers, URLSearchParams } from "../../test-utils";
 
 describe("Form data matching", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -14,7 +14,7 @@ describe("Form data matching", function () {
     });
 
     it("should match requests by form data", async () => {
-        let form = new URLSearchParams();
+        const form = new URLSearchParams();
         form.set('shouldMatch', 'yes');
 
         return expect(fetch(server.url, {
@@ -27,7 +27,7 @@ describe("Form data matching", function () {
     });
 
     it("shouldn't match requests with the wrong form data", async () => {
-        let form = new URLSearchParams();
+        const form = new URLSearchParams();
         form.set('shouldMatch', 'no');
 
         return expect(fetch(server.url, {

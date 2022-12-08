@@ -7,7 +7,7 @@ describe("Mockttp explanation messages", function () {
 
     this.timeout(5000);
 
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -19,8 +19,8 @@ describe("Mockttp explanation messages", function () {
         await server.forGet("/endpoint").times(4).thenReply(200, "7/8/9/10");
         await server.forGet("/endpoint").always().thenReply(200, "forever");
 
-        let response = await fetch(server.urlFor("/non-existent-endpoint"));
-        let responseText = await response.text();
+        const response = await fetch(server.urlFor("/non-existent-endpoint"));
+        const responseText = await response.text();
 
         expect(responseText).to.include(`
 Match requests making GETs for /endpoint, and then respond with status 200 and body "1", once (seen 0).
@@ -42,8 +42,8 @@ Match requests making GETs for /endpoint, and then respond with status 200 and b
             _.range(8).map(() => fetch(server.urlFor("/endpoint")))
         );
 
-        let response = await fetch(server.urlFor("/non-existent-endpoint"));
-        let responseText = await response.text();
+        const response = await fetch(server.urlFor("/non-existent-endpoint"));
+        const responseText = await response.text();
 
         expect(responseText).to.include(`
 Match requests making GETs for /endpoint, and then respond with status 200 and body "1", once (done).
@@ -64,9 +64,9 @@ Match requests making GETs for /endpoint, and then respond with status 200 and b
         await server.forAnyWebSocket().thenForwardTo("google.com");
 
         await fetch(server.urlFor("/endpointA/123"));
-        let response = await fetch(server.urlFor("/non-existent-endpoint"));
+        const response = await fetch(server.urlFor("/non-existent-endpoint"));
 
-        let text = await response.text();
+        const text = await response.text();
 
         expect(text).to.include(`No rules were found matching this request.`);
         expect(text).to.include(`The configured rules are:
@@ -84,8 +84,8 @@ Match websockets for anything, and then forward the websocket to google.com.
         await server.forPost("/endpointA").thenCallback(() => ({}));
         await server.forPost("/endpointB").thenCallback(function handleRequest() { return {}; });
 
-        let response = await fetch(server.urlFor("/non-existent-endpoint"));
-        let text = await response.text();
+        const response = await fetch(server.urlFor("/non-existent-endpoint"));
+        const text = await response.text();
 
         expect(text).to.include(`The configured rules are:
 Match requests making POSTs for /endpointA, and then respond using provided callback.
@@ -111,7 +111,7 @@ Match requests making POSTs for /endpointB, and then respond using provided call
     });
 
     it("should explain the body of received unmatched requests", async () => {
-        let form = new URLSearchParams();
+        const form = new URLSearchParams();
         form.set('a', '123');
 
         await expect(fetch(server.urlFor("/endpoint"), {
@@ -126,19 +126,19 @@ Match requests making POSTs for /endpointB, and then respond using provided call
     });
 
     it("should provide suggestions for new GET rules you could use", async () => {
-        let response = await fetch(server.urlFor("/endpoint"));
+        const response = await fetch(server.urlFor("/endpoint"));
 
-        let text = await response.text();
+        const text = await response.text();
 
         expect(text).to.include(`You can fix this by adding a rule to match this request, for example:
 mockServer.forGet("/endpoint").thenReply(200, "your response");`);
     });
 
     it("should provide suggestions for new POST rules you could use", async () => {
-        let form = new URLSearchParams();
+        const form = new URLSearchParams();
         form.set('shouldMatch', 'yes');
 
-        let response = await fetch(server.urlFor("/endpoint"), {
+        const response = await fetch(server.urlFor("/endpoint"), {
             method: 'POST',
             headers: new Headers({
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -146,7 +146,7 @@ mockServer.forGet("/endpoint").thenReply(200, "your response");`);
             body: form
         });
 
-        let text = await response.text();
+        const text = await response.text();
 
         expect(text).to.include(`You can fix this by adding a rule to match this request, for example:
 mockServer.forPost("/endpoint").withForm({"shouldMatch":"yes"}).thenReply(200, "your response");`);
@@ -155,10 +155,10 @@ mockServer.forPost("/endpoint").withForm({"shouldMatch":"yes"}).thenReply(200, "
     it("should explain why passthrough fails for non-proxy requests", async () => {
         await server.forGet("/endpoint").thenPassThrough();
 
-        let result = await fetch(server.urlFor("/endpoint"));
+        const result = await fetch(server.urlFor("/endpoint"));
 
         expect(result.status).to.equal(500);
-        let body = await result.text();
+        const body = await result.text();
         expect(body).to.include(
 `Passthrough loop detected. This probably means you're sending a request directly to a passthrough endpoint, \
 which is forwarding it to the target URL, which is a passthrough endpoint, which is forwarding it to the target \

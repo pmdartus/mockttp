@@ -20,7 +20,7 @@ nodeOnly(() => {
     describe("Mockttp when used as an HTTP proxy", function () {
 
         let server: Mockttp;
-        let remoteServer = getLocal();
+        const remoteServer = getLocal();
 
         beforeEach(async () => {
             await remoteServer.start();
@@ -43,19 +43,19 @@ nodeOnly(() => {
             it("should mock proxied HTTP with request + process.env", async () => {
                 await server.forGet("http://example.com/endpoint").thenReply(200, "mocked data");
 
-                let response = await request.get("http://example.com/endpoint");
+                const response = await request.get("http://example.com/endpoint");
                 expect(response).to.equal("mocked data");
             });
 
             it("should mock proxied HTTP matching relative URLs", async () => {
                 await server.forGet("/endpoint").thenReply(200, "mocked data");
-                let response = await request.get("http://example.com/endpoint");
+                const response = await request.get("http://example.com/endpoint");
                 expect(response).to.equal("mocked data");
             });
 
             it("should mock proxied HTTP matching absolute protocol-less URLs", async () => {
                 await server.forGet("example.com/endpoint").thenReply(200, "mocked data");
-                let response = await request.get("http://example.com/endpoint");
+                const response = await request.get("http://example.com/endpoint");
                 expect(response).to.equal("mocked data");
             });
 
@@ -82,7 +82,7 @@ nodeOnly(() => {
             it("should be able to pass through requests", async () => {
                 await server.forGet("http://example.com/").thenPassThrough();
 
-                let response = await request.get("http://example.com/");
+                const response = await request.get("http://example.com/");
                 expect(response).to.include(
                     "This domain is for use in illustrative examples in documents."
                 );
@@ -141,7 +141,7 @@ nodeOnly(() => {
 
                 await server.forGet(remoteServer.url).thenPassThrough();
 
-                let response = await request.get({
+                const response = await request.get({
                     url: remoteServer.url,
                     resolveWithFullResponse: true
                 });
@@ -163,7 +163,7 @@ nodeOnly(() => {
                 }));
                 await server.forPost(remoteServer.url).thenPassThrough();
 
-                let response = await request.post({
+                const response = await request.post({
                     url: remoteServer.url,
                     json: { "test": true }
                 });
@@ -178,7 +178,7 @@ nodeOnly(() => {
                 }));
                 await server.forPost(remoteServer.url).thenPassThrough();
 
-                let response = await request.post({
+                const response = await request.post({
                     url: remoteServer.url,
                     json: { "test": true }
                 });
@@ -193,7 +193,7 @@ nodeOnly(() => {
                 }));
                 await server.forGet(remoteServer.urlFor('/get')).thenPassThrough();
 
-                let response = await request.get(remoteServer.urlFor('/get?a=b'));
+                const response = await request.get(remoteServer.urlFor('/get?a=b'));
 
                 expect(response).to.equal(remoteServer.urlFor('/get?a=b'));
             });
@@ -217,7 +217,7 @@ nodeOnly(() => {
                 server.forGet(remoteServer.url).thenPassThrough();
                 process.env = INITIAL_ENV;
 
-                let response = await request.get(server.urlFor("/"), {
+                const response = await request.get(server.urlFor("/"), {
                     headers: { host: `localhost:${remoteServer.port}`  }
                 });
 
@@ -228,7 +228,7 @@ nodeOnly(() => {
                 await remoteServer.forAnyRequest().thenCloseConnection();
                 await server.forGet(remoteServer.url).thenPassThrough();
 
-                let response: Response | Error = await request.get(remoteServer.url, {
+                const response: Response | Error = await request.get(remoteServer.url, {
                     simple: false
                 }).catch((e) => e);
 
@@ -247,7 +247,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"));
+                const response = await request.get(remoteServer.urlFor("/"));
                 expect(response).to.equal("GET");
             });
 
@@ -262,7 +262,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"));
+                const response = await request.get(remoteServer.urlFor("/"));
                 expect(response).to.equal("POST");
             });
 
@@ -277,7 +277,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"));
+                const response = await request.get(remoteServer.urlFor("/"));
                 expect(response).to.equal("/endpoint");
             });
 
@@ -306,11 +306,11 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get('http://example.com');
+                const response = await request.get('http://example.com');
                 expect(response).to.equal("my remote");
 
                 // Should automatically update the host header en route:
-                let resultingRequest = (await remoteEndpoint.getSeenRequests())[0];
+                const resultingRequest = (await remoteEndpoint.getSeenRequests())[0];
                 expect(resultingRequest.headers).to.deep.equal({
                     'host': `localhost:${remoteServer.port}`,
                     'connection': 'close'
@@ -346,7 +346,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/rewrite"), {
+                const response = await request.get(remoteServer.urlFor("/rewrite"), {
                     headers: {
                         'UPPERCASE-HEADER': 'UPPERCASE-VALUE',
                         'multival': ['value 1', 'value 2']
@@ -373,7 +373,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/rewrite"));
+                const response = await request.get(remoteServer.urlFor("/rewrite"));
                 expect(JSON.parse(response)['x-test-header']).to.equal("test");
             });
 
@@ -398,7 +398,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/rewrite"));
+                const response = await request.get(remoteServer.urlFor("/rewrite"));
                 expect(JSON.parse(response)['x-test-header']).to.equal("test");
             });
 
@@ -418,7 +418,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/"), {
+                const response = await request.post(remoteServer.urlFor("/"), {
                     body: "initial body"
                 });
                 expect(response).to.equal("initial body extended");
@@ -436,7 +436,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/"), {
+                const response = await request.post(remoteServer.urlFor("/"), {
                     body: "initial body"
                 });
                 expect(response).to.equal("");
@@ -458,7 +458,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/"), {
+                const response = await request.post(remoteServer.urlFor("/"), {
                     json: true
                 });
                 expect(response).to.deep.equal({ hello: "world" });
@@ -564,7 +564,7 @@ nodeOnly(() => {
                     })
                 });
 
-                let response = await request.post(remoteServer.urlFor("/"), {
+                const response = await request.post(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -589,7 +589,7 @@ nodeOnly(() => {
                     })
                 });
 
-                let response = await request.post(remoteServer.urlFor("/"), {
+                const response = await request.post(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     encoding: null,
                     simple: false
@@ -617,7 +617,7 @@ nodeOnly(() => {
                     })
                 });
 
-                let response = await request.post(remoteServer.urlFor("/"), {
+                const response = await request.post(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     encoding: null,
                     simple: false
@@ -641,7 +641,7 @@ nodeOnly(() => {
                     })
                 });
 
-                let response: Response | Error = await request.get(remoteServer.url, {
+                const response: Response | Error = await request.get(remoteServer.url, {
                     simple: false
                 }).catch((e) => e);
 
@@ -663,7 +663,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -692,7 +692,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"));
+                const response = await request.get(remoteServer.urlFor("/"));
                 expect(response).to.equal('all good');
             });
 
@@ -710,7 +710,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -735,7 +735,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -758,7 +758,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"));
+                const response = await request.get(remoteServer.urlFor("/"));
                 expect(response).to.equal('original text extended');
             });
 
@@ -775,7 +775,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     json: true
                 });
                 expect(response).to.deep.equal({ hello: "world" });
@@ -793,7 +793,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     json: true,
                     encoding: null
                 });
@@ -813,7 +813,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     json: true,
                     encoding: null
                 });
@@ -827,7 +827,7 @@ nodeOnly(() => {
                     beforeResponse: () => ({ })
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"));
+                const response = await request.get(remoteServer.urlFor("/"));
                 expect(response).to.equal('real body');
             });
 
@@ -838,7 +838,7 @@ nodeOnly(() => {
                     beforeResponse: () => 'close'
                 });
 
-                let response: Response | Error = await request.get(remoteServer.url, {
+                const response: Response | Error = await request.get(remoteServer.url, {
                     simple: false
                 }).catch((e) => e);
 
@@ -858,7 +858,7 @@ nodeOnly(() => {
                     beforeRequest: () => { throw new Error('Oops') }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -872,7 +872,7 @@ nodeOnly(() => {
                     beforeResponse: () => { throw new Error('Oops') }
                 });
 
-                let response = await request.get(remoteServer.urlFor("/"), {
+                const response = await request.get(remoteServer.urlFor("/"), {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -882,7 +882,7 @@ nodeOnly(() => {
             it("should return a 502 if proxying fails", async () => {
                 await server.forGet().thenPassThrough();
 
-                let response = await request.get(`http://invalid.example`, {
+                const response = await request.get(`http://invalid.example`, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -895,7 +895,7 @@ nodeOnly(() => {
                     simulateConnectionErrors: true
                 });
 
-                let result = await request.get(`http://invalid.example`, {
+                const result = await request.get(`http://invalid.example`, {
                     resolveWithFullResponse: true,
                     simple: false
                 }).catch(e => e);
@@ -940,7 +940,7 @@ nodeOnly(() => {
                     server.forAnyRequest().thenPassThrough();
 
                     // Localhost here will be ambiguous - we're expecting Mockttp to work it out
-                    let response = await request.get(`http://localhost:${ipV6Port}`);
+                    const response = await request.get(`http://localhost:${ipV6Port}`);
                     await requestReceived;
 
                     expect(response).to.equal("OK");
@@ -963,7 +963,7 @@ nodeOnly(() => {
                 const remoteEndpoint = await remoteServer.forAnyRequest().thenReply(200);
                 const proxyEndpoint = await server.forPost(remoteServer.url).thenPassThrough();
 
-                let response = await request.post({
+                const response = await request.post({
                     url: remoteServer.url,
                     body: "A large request body",
                     resolveWithFullResponse: true
@@ -984,7 +984,7 @@ nodeOnly(() => {
                 await remoteServer.forAnyRequest().thenReply(200, "A large response body");
                 const proxyEndpoint = await server.forGet(remoteServer.url).thenPassThrough();
 
-                let response = await request.get({
+                const response = await request.get({
                     url: remoteServer.url,
                     resolveWithFullResponse: true
                 });

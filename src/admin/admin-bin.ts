@@ -37,7 +37,7 @@ async function runCommandWithServer(command: string, debug: boolean, port?: numb
     const server = Mockttp.getAdminServer({ debug });
     await server.start(port);
 
-    let realProcess = childProcess.spawn(command, [], {
+    const realProcess = childProcess.spawn(command, [], {
         shell: true,
         stdio: 'inherit'
     });

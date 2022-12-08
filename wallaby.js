@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 module.exports = (wallaby) => {
   process.env.NODE_EXTRA_CA_CERTS = './test/fixtures/test-ca.pem'
 

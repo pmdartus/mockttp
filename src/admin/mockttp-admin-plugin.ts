@@ -55,5 +55,5 @@ export class MockttpAdminPlugin implements AdminPlugin<
 
     buildResolvers(stream: Duplex, ruleParameters: { [key: string]: any }) {
         return buildAdminServerModel(this.mockServer, stream, ruleParameters)
-    };
+    }
 }

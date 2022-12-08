@@ -22,7 +22,7 @@ import {
 
 function makeAbortableRequest(server: Mockttp, path: string) {
     if (isNode) {
-        let req = http.request({
+        const req = http.request({
             method: 'POST',
             hostname: 'localhost',
             port: server.port,
@@ -31,7 +31,7 @@ function makeAbortableRequest(server: Mockttp, path: string) {
         req.on('error', () => {});
         return req;
     } else {
-        let abortController = new AbortController();
+        const abortController = new AbortController();
         fetch(server.urlFor(path), {
             method: 'POST',
             signal: abortController.signal as AbortSignal
@@ -44,7 +44,7 @@ describe("Response subscriptions", () => {
 
     describe("with an HTTP server", () => {
 
-        let server = getLocal();
+        const server = getLocal();
 
         beforeEach(() => server.start());
         afterEach(() => server.stop());
@@ -54,12 +54,12 @@ describe("Response subscriptions", () => {
                 'x-extra-header': 'present'
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.statusCode).to.equal(200);
             expect(await seenResponse.body.getText()).to.equal('Mock response');
             expect(seenResponse.tags).to.deep.equal([]);
@@ -82,12 +82,12 @@ describe("Response subscriptions", () => {
                 'content-encoding': 'gzip'
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.statusCode).to.equal(200);
             expect(await seenResponse.body.getText()).to.equal('Mock response');
         });
@@ -99,12 +99,12 @@ describe("Response subscriptions", () => {
                 'content-encoding': 'deflate'
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.statusCode).to.equal(200);
             expect(await seenResponse.body.getText()).to.equal('Mock response');
         });
@@ -116,12 +116,12 @@ describe("Response subscriptions", () => {
                 'content-encoding': 'deflate'
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.statusCode).to.equal(200);
             expect(await seenResponse.body.getText()).to.equal('Mock response');
         });
@@ -129,8 +129,8 @@ describe("Response subscriptions", () => {
         it("should include an id that matches the request event", async () => {
             server.forGet('/mocked-endpoint').thenReply(200);
 
-            let seenRequestPromise = getDeferred<CompletedRequest>();
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenRequestPromise = getDeferred<CompletedRequest>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
 
             await Promise.all([
                 server.on('request', (r) => seenRequestPromise.resolve(r)),
@@ -139,20 +139,20 @@ describe("Response subscriptions", () => {
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
-            let seenRequest = await seenRequestPromise;
+            const seenResponse = await seenResponsePromise;
+            const seenRequest = await seenRequestPromise;
 
             expect(seenRequest.id).to.be.a('string');
             expect(seenRequest.id).to.equal(seenResponse.id);
         });
 
         it("should include timing information", async () => {
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"), { method: 'POST', body: 'body-text' });
 
-            let { timingEvents } = <{ timingEvents: TimingEvents }> await seenResponsePromise;
+            const { timingEvents } = <{ timingEvents: TimingEvents }> await seenResponsePromise;
             expect(timingEvents.startTimestamp).to.be.a('number');
             expect(timingEvents.bodyReceivedTimestamp).to.be.a('number');
             expect(timingEvents.headersSentTimestamp).to.be.a('number');
@@ -172,12 +172,12 @@ describe("Response subscriptions", () => {
                 "last-header": "2",
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.rawHeaders).to.deep.equal([
                 ...(isNode
                     ? []
@@ -192,7 +192,7 @@ describe("Response subscriptions", () => {
 
     describe("with an HTTP server allowing only tiny bodies", () => {
 
-        let server = getLocal({
+        const server = getLocal({
             maxBodySize: 10 // 10 bytes max
         });
 
@@ -204,12 +204,12 @@ describe("Response subscriptions", () => {
                 'x-extra-header': 'present'
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.statusCode).to.equal(200);
             expect(await seenResponse.body.getText()).to.equal('TinyResp');
         });
@@ -219,12 +219,12 @@ describe("Response subscriptions", () => {
                 'x-extra-header': 'present'
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.statusCode).to.equal(200);
             expect(await seenResponse.body.getText()).to.equal(''); // Body omitted
         });
@@ -233,7 +233,7 @@ describe("Response subscriptions", () => {
 
     describe("with an HTTPS server", () => {
 
-        let server = getLocal({
+        const server = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'
@@ -248,12 +248,12 @@ describe("Response subscriptions", () => {
                 'x-extra-header': 'present'
             });
 
-            let seenResponsePromise = getDeferred<CompletedResponse>();
+            const seenResponsePromise = getDeferred<CompletedResponse>();
             await server.on('response', (r) => seenResponsePromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"));
 
-            let seenResponse = await seenResponsePromise;
+            const seenResponse = await seenResponsePromise;
             expect(seenResponse.statusCode).to.equal(200);
             expect(await seenResponse.body.getText()).to.equal('Mock response');
             expect(seenResponse.tags).to.deep.equal([]);
@@ -273,13 +273,13 @@ describe("Response subscriptions", () => {
 });
 
 describe("Abort subscriptions", () => {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
 
     it("should not be sent for successful requests", async () => {
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
         await server.forGet('/mocked-endpoint').thenReply(200);
 
@@ -292,21 +292,21 @@ describe("Abort subscriptions", () => {
     });
 
     it("should be sent when a request is aborted whilst handling", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
         await server.forPost('/mocked-endpoint').thenCallback(() => delay(500).then(() => ({})));
 
-        let abortable = makeAbortableRequest(server, '/mocked-endpoint');
+        const abortable = makeAbortableRequest(server, '/mocked-endpoint');
         nodeOnly(() => (abortable as http.ClientRequest).end('request body'));
 
-        let seenRequest = await seenRequestPromise;
+        const seenRequest = await seenRequestPromise;
         abortable.abort();
 
-        let seenAbort = await seenAbortPromise;
+        const seenAbort = await seenAbortPromise;
         expect(seenRequest.id).to.equal(seenAbort.id);
         expect(seenRequest.tags).to.deep.equal([]);
         expect(seenRequest.headers['host']).to.deep.equal(`localhost:${server.port}`);
@@ -317,65 +317,65 @@ describe("Abort subscriptions", () => {
     });
 
     it("should be sent when a request is aborted during an intentional timeout", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
         await server.forPost('/mocked-endpoint').thenTimeout();
 
-        let abortable = makeAbortableRequest(server, '/mocked-endpoint');
+        const abortable = makeAbortableRequest(server, '/mocked-endpoint');
         nodeOnly(() => (abortable as http.ClientRequest).end('request body'));
 
-        let seenRequest = await seenRequestPromise;
+        const seenRequest = await seenRequestPromise;
         abortable.abort();
 
-        let seenAbort = await seenAbortPromise;
+        const seenAbort = await seenAbortPromise;
         expect(seenRequest.id).to.equal(seenAbort.id);
         expect(seenAbort.error).to.equal(undefined); // Client abort, not an error
     });
 
     it("should be sent when a request is intentionally closed by a close handler", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
         await server.forGet('/mocked-endpoint').thenCloseConnection();
 
         fetch(server.urlFor('/mocked-endpoint')).catch(() => {});
 
-        let seenRequest = await seenRequestPromise;
-        let seenAbort = await seenAbortPromise;
+        const seenRequest = await seenRequestPromise;
+        const seenAbort = await seenAbortPromise;
         expect(seenRequest.id).to.equal(seenAbort.id);
 
         expect(seenAbort.error!.message).to.equal('Connection closed intentionally by rule');
     });
 
     it("should be sent when a request is intentionally closed by a callback handler", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
         await server.forGet('/mocked-endpoint').thenCallback(() => 'close');
 
         fetch(server.urlFor('/mocked-endpoint')).catch(() => {});
 
-        let seenRequest = await seenRequestPromise;
-        let seenAbort = await seenAbortPromise;
+        const seenRequest = await seenRequestPromise;
+        const seenAbort = await seenAbortPromise;
         expect(seenRequest.id).to.equal(seenAbort.id);
         expect(seenAbort.error!.message).to.equal('Connection closed intentionally by rule');
     });
 
     it("should be sent when a request is intentionally closed by beforeRequest", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
         await server.forGet('/mocked-endpoint').thenPassThrough({
@@ -386,17 +386,17 @@ describe("Abort subscriptions", () => {
 
         fetch(server.urlFor('/mocked-endpoint')).catch(() => {});
 
-        let seenRequest = await seenRequestPromise;
-        let seenAbort = await seenAbortPromise;
+        const seenRequest = await seenRequestPromise;
+        const seenAbort = await seenAbortPromise;
         expect(seenRequest.id).to.equal(seenAbort.id);
         expect(seenAbort.error!.message).to.equal('Connection closed intentionally by rule');
     });
 
     it("should be sent when a forwarded request is intentionally closed by beforeResponse", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
         await server.forGet('/mocked-endpoint').thenPassThrough({
@@ -406,8 +406,8 @@ describe("Abort subscriptions", () => {
 
         fetch(server.urlFor('/mocked-endpoint')).catch(() => {});
 
-        let seenRequest = await seenRequestPromise;
-        let seenAbort = await seenAbortPromise;
+        const seenRequest = await seenRequestPromise;
+        const seenAbort = await seenAbortPromise;
         expect(seenRequest.id).to.equal(seenAbort.id);
         expect(seenAbort.error!.message).to.equal('Connection closed intentionally by rule');
     });
@@ -417,14 +417,14 @@ describe("Abort subscriptions", () => {
             let wasRequestSeen = false;
             await server.on('request', (r) => { wasRequestSeen = true; });
 
-            let seenAbortPromise = getDeferred<AbortedRequest>();
+            const seenAbortPromise = getDeferred<AbortedRequest>();
             await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
-            let abortable = makeAbortableRequest(server, '/mocked-endpoint') as http.ClientRequest;
+            const abortable = makeAbortableRequest(server, '/mocked-endpoint') as http.ClientRequest;
             // Start writing a body, but never .end(), so it never completes
             abortable.write('start request', () => abortable.abort());
 
-            let seenAbort = await seenAbortPromise;
+            const seenAbort = await seenAbortPromise;
             expect(seenAbort.timingEvents.bodyReceivedTimestamp).to.equal(undefined);
             expect(seenAbort.error).to.equal(undefined); // Client abort, not an error
             expect(wasRequestSeen).to.equal(false);
@@ -450,10 +450,10 @@ describe("Abort subscriptions", () => {
             });
 
             it("should be sent when the remote server aborts the response", async () => {
-                let seenAbortPromise = getDeferred<AbortedRequest>();
+                const seenAbortPromise = getDeferred<AbortedRequest>();
                 await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
-                let seenResponsePromise = getDeferred<CompletedResponse>();
+                const seenResponsePromise = getDeferred<CompletedResponse>();
                 await server.on('response', (r) => seenResponsePromise.resolve(r));
 
                 await server.forAnyRequest().thenForwardTo(`http://localhost:8901`);
@@ -472,10 +472,10 @@ describe("Abort subscriptions", () => {
             });
 
             it("should be sent when a remote proxy aborts the response", async () => {
-                let seenAbortPromise = getDeferred<AbortedRequest>();
+                const seenAbortPromise = getDeferred<AbortedRequest>();
                 await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
-                let seenResponsePromise = getDeferred<CompletedResponse>();
+                const seenResponsePromise = getDeferred<CompletedResponse>();
                 await server.on('response', (r) => seenResponsePromise.resolve(r));
 
                 await server.forAnyRequest().thenPassThrough({
@@ -502,15 +502,15 @@ describe("Abort subscriptions", () => {
     });
 
     it("should be sent in place of response notifications, not in addition", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenResponsePromise = getDeferred<CompletedResponse>();
+        const seenResponsePromise = getDeferred<CompletedResponse>();
         await server.on('response', (r) => seenResponsePromise.resolve(r));
 
         await server.forPost('/mocked-endpoint').thenCallback((req) => delay(500).then(() => ({})));
 
-        let abortable = makeAbortableRequest(server, '/mocked-endpoint');
+        const abortable = makeAbortableRequest(server, '/mocked-endpoint');
         nodeOnly(() => (abortable as http.ClientRequest).end('request body'));
 
         await seenRequestPromise;
@@ -523,21 +523,21 @@ describe("Abort subscriptions", () => {
     });
 
     it("should include timing information", async () => {
-        let seenRequestPromise = getDeferred<CompletedRequest>();
+        const seenRequestPromise = getDeferred<CompletedRequest>();
         await server.on('request', (r) => seenRequestPromise.resolve(r));
 
-        let seenAbortPromise = getDeferred<AbortedRequest>();
+        const seenAbortPromise = getDeferred<AbortedRequest>();
         await server.on('abort', (r) => seenAbortPromise.resolve(r));
 
         await server.forPost('/mocked-endpoint').thenCallback(() => delay(500).then(() => ({})));
 
-        let abortable = makeAbortableRequest(server, '/mocked-endpoint');
+        const abortable = makeAbortableRequest(server, '/mocked-endpoint');
         nodeOnly(() => (abortable as http.ClientRequest).end('request body'));
 
         await seenRequestPromise;
         abortable.abort();
 
-        let { timingEvents } = <{ timingEvents: TimingEvents }> await seenAbortPromise;
+        const { timingEvents } = <{ timingEvents: TimingEvents }> await seenAbortPromise;
         expect(timingEvents.startTimestamp).to.be.a('number');
         expect(timingEvents.bodyReceivedTimestamp).to.be.a('number');
         expect(timingEvents.abortedTimestamp).to.be.a('number');

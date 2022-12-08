@@ -68,7 +68,7 @@ export function rawHeadersToObject(rawHeaders: RawHeaders): Headers {
 export function objectHeadersToRaw(headers: Headers): RawHeaders {
     const rawHeaders: RawHeaders = [];
 
-    for (let key in headers) {
+    for (const key in headers) {
         const value = headers[key];
 
         if (value === undefined) continue; // Drop undefined header values
@@ -86,7 +86,7 @@ export function objectHeadersToRaw(headers: Headers): RawHeaders {
 export function objectHeadersToFlat(headers: Headers): string[] {
     const flatHeaders: string[] = [];
 
-    for (let key in headers) {
+    for (const key in headers) {
         const value = headers[key];
 
         if (value === undefined) continue; // Drop undefined header values

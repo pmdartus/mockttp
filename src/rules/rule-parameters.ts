@@ -20,7 +20,7 @@ export type RuleParameterReference<R> = {
 
 export function isParamReference(input: any): input is RuleParameterReference<unknown> {
     return input && !!input[MOCKTTP_PARAM_REF];
-};
+}
 
 export function dereferenceParam<R>(paramRef: RuleParameterReference<R>, params: RuleParameters): R {
     const paramKey = paramRef[MOCKTTP_PARAM_REF];
@@ -29,7 +29,7 @@ export function dereferenceParam<R>(paramRef: RuleParameterReference<R>, params:
     } else {
         throw new Error(`Invalid reference to undefined rule parameter '${paramKey}'`);
     }
-};
+}
 
 export function assertParamDereferenced<R>(maybeParamRef: R | RuleParameterReference<R>): R {
     if (isParamReference(maybeParamRef)) {

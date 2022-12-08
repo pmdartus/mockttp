@@ -78,7 +78,7 @@ export async function getProxySetting(
     if (_.isFunction(configSource)) return configSource(params);
     else if (_.isArray(configSource)) {
         let result: ProxySetting | undefined;
-        for (let configArrayOption of configSource) {
+        for (const configArrayOption of configSource) {
             result = await getProxySetting(configArrayOption, params);
             if (result) break;
         }
@@ -105,8 +105,8 @@ export const matchesNoProxy = (hostname: string, portNum: number, noProxyValues:
         if (noProxyPort && port !== noProxyPort) return false;
 
         for (let i = 0; i < noProxyParts.length; i++) {
-            let noProxyPart = noProxyParts[i];
-            let hostPart = hostParts[i];
+            const noProxyPart = noProxyParts[i];
+            const hostPart = hostParts[i];
 
             if (hostPart === undefined) return false; // No-proxy is longer than hostname
             if (noProxyPart !== hostPart) return false; // Mismatch

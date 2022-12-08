@@ -57,7 +57,7 @@ nodeOnly(() => {
             });
             await adminServer.start();
 
-            let client = adminClient = new PluggableAdmin.AdminClient<{
+            const client = adminClient = new PluggableAdmin.AdminClient<{
                 myPlugin: PluggableAdmin.AdminPlugin<{}, { aMetadataField: boolean }>
             }>();
             const startResult = await client.start({

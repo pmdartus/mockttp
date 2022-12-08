@@ -625,7 +625,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
         });
 
         try {
-            let nextRulePromise = this.findMatchingRule(this.requestRuleSets, request);
+            const nextRulePromise = this.findMatchingRule(this.requestRuleSets, request);
 
             // Async: once we know what the next rule is, ping a request event
             nextRulePromise
@@ -636,7 +636,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
                     this.announceCompletedRequestAsync(request);
                 });
 
-            let nextRule = await nextRulePromise;
+            const nextRule = await nextRulePromise;
             if (nextRule) {
                 if (this.debug) console.log(`Request matched rule: ${nextRule.explain()}`);
                 await nextRule.handle(request, response, this.recordTraffic);
@@ -691,7 +691,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
         });
 
         try {
-            let nextRulePromise = this.findMatchingRule(this.webSocketRuleSets, request);
+            const nextRulePromise = this.findMatchingRule(this.webSocketRuleSets, request);
 
             // Async: once we know what the next rule is, ping a websocket-request event
             nextRulePromise
@@ -704,7 +704,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
 
             this.trackWebSocketEvents(request, socket);
 
-            let nextRule = await nextRulePromise;
+            const nextRule = await nextRulePromise;
             if (nextRule) {
                 if (this.debug) console.log(`Websocket matched rule: ${nextRule.explain()}`);
                 await nextRule.handle(request, socket, head, this.recordTraffic);
@@ -746,14 +746,14 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
         ruleSets: { [priority: number]: Array<R> },
         request: OngoingRequest
     ): Promise<R | undefined> {
-        for (let ruleSet of Object.values(ruleSets).reverse()) { // Obj.values returns numeric keys in ascending order
+        for (const ruleSet of Object.values(ruleSets).reverse()) { // Obj.values returns numeric keys in ascending order
             // Start all rules matching immediately
             const rulesMatches = ruleSet
                 .filter((r) => r.isComplete() !== true) // Skip all rules that are definitely completed
                 .map((r) => ({ rule: r, match: r.matches(request) }));
 
             // Evaluate the matches one by one, and immediately use the first
-            for (let { rule, match } of rulesMatches) {
+            for (const { rule, match } of rulesMatches) {
                 if (await match && rule.isComplete() === false) {
                     // The first matching incomplete rule we find is the one we should use
                     return rule;
@@ -773,7 +773,7 @@ export class MockttpServer extends AbstractMockttp implements Mockttp {
     }
 
     private async getUnmatchedRequestExplanation(request: OngoingRequest) {
-        let requestExplanation = await this.explainRequest(request);
+        const requestExplanation = await this.explainRequest(request);
         if (this.debug) console.warn(`Unmatched request received: ${requestExplanation}`);
 
         const requestRules = Object.values(this.requestRuleSets).flat();
@@ -816,7 +816,7 @@ ${await this.suggestRule(request)}`
     private async explainRequest(request: OngoingRequest): Promise<string> {
         let msg = `${request.method} request to ${request.url}`;
 
-        let bodyText = await request.body.asText();
+        const bodyText = await request.body.asText();
         if (bodyText) msg += ` with body \`${bodyText}\``;
 
         if (!_.isEmpty(request.headers)) {
@@ -834,8 +834,8 @@ ${await this.suggestRule(request)}`
         msg += `mockServer.for${_.startCase(request.method.toLowerCase())}("${request.path}")`;
 
         const contentType = request.headers['content-type'];
-        let isFormRequest = !!contentType && contentType.indexOf("application/x-www-form-urlencoded") > -1;
-        let formBody = await request.body.asFormData().catch(() => undefined);
+        const isFormRequest = !!contentType && contentType.indexOf("application/x-www-form-urlencoded") > -1;
+        const formBody = await request.body.asFormData().catch(() => undefined);
 
         if (isFormRequest && !!formBody) {
             msg += `.withForm(${JSON.stringify(formBody)})`;

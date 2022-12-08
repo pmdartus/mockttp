@@ -14,7 +14,7 @@ nodeOnly(() => {
     describe("Mockttp configured to proxy traffic upstream", function () {
 
         let server: Mockttp;
-        let remoteServer = getLocal();
+        const remoteServer = getLocal();
 
         beforeEach(async () => {
             await remoteServer.start();

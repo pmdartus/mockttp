@@ -4,7 +4,7 @@ import { getLocal } from "../../..";
 import { expect, fetch, nodeOnly } from "../../test-utils";
 
 describe("Hostname matching", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());

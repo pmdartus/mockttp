@@ -31,6 +31,7 @@ interface SymbolConstructor {
     readonly asyncIterator: symbol;
 }
 
+// eslint-disable-next-line no-var
 declare var Symbol: SymbolConstructor;
 
 declare interface AsyncIterator<T> {

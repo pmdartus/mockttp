@@ -157,7 +157,7 @@ export class MockttpAdminRequestBuilder {
                 );
             }
         };
-    };
+    }
 
     buildMockedEndpointsQuery(): AdminQuery<
         { mockedEndpoints: MockedEndpointData[] },
@@ -470,7 +470,7 @@ export class MockttpAdminRequestBuilder {
 
     private getEndpointDataGetter = (adminClient: AdminClient<{}>, ruleId: string) =>
         async (): Promise<MockedEndpointData | null> => {
-            let result = await adminClient.sendQuery<{
+            const result = await adminClient.sendQuery<{
                 mockedEndpoint: MockedEndpointData | null
             }>({
                 query: gql`

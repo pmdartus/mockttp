@@ -17,7 +17,7 @@ import { streamToBuffer } from '../../src/util/buffer-utils';
 
 describe("When configured for HTTPS", () => {
     describe("with key & cert paths", () => {
-        let server = getLocal({
+        const server = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'
@@ -44,7 +44,7 @@ describe("When configured for HTTPS", () => {
         it("matches HTTPS requests against protocol-less URL matchers", async () => {
             await server.forGet(`localhost:${server.port}/file.txt`).thenReply(200, 'Fake file');
 
-            let result = await fetch(server.urlFor('/file.txt'));
+            const result = await fetch(server.urlFor('/file.txt'));
 
             await expect(result).to.have.responseText('Fake file');
         });
@@ -55,7 +55,7 @@ describe("When configured for HTTPS", () => {
 
         describe("with overriden cert parameters", () => {
 
-            let server = getLocal({
+            const server = getLocal({
                 https: {
                     keyPath: './test/fixtures/test-ca.key',
                     certPath: './test/fixtures/test-ca.pem',
@@ -110,7 +110,7 @@ describe("When configured for HTTPS", () => {
 
         describe("with some hostnames excluded", () => {
 
-            let server = getLocal({
+            const server = getLocal({
                 https: {
                     keyPath: './test/fixtures/test-ca.key',
                     certPath: './test/fixtures/test-ca.pem',

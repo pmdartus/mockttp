@@ -187,7 +187,7 @@ async function writeResponseFromCallback(result: CallbackResponseMessageResult, 
 export class CallbackHandler extends CallbackHandlerDefinition {
 
     async handle(request: OngoingRequest, response: OngoingResponse) {
-        let req = await waitForCompletedRequest(request);
+        const req = await waitForCompletedRequest(request);
 
         let outResponse: CallbackResponseResult;
         try {
@@ -271,7 +271,7 @@ export class StreamHandler extends StreamHandlerDefinition {
             transform: function (this: Transform, message, encoding, callback) {
                 const { event, content } = message;
 
-                let deserializedEventData = content && (
+                const deserializedEventData = content && (
                     content.type === 'string' ? content.value :
                     content.type === 'buffer' ? Buffer.from(content.value, 'base64') :
                     content.type === 'arraybuffer' ? Buffer.from(decodeBase64(content.value)) :
@@ -441,7 +441,7 @@ export class PassThroughHandler extends PassThroughHandlerDefinition {
                 // Should never happen really, but just in case:
                 hostHeader = [hostHeaderName, hostname!];
                 rawHeaders.unshift(hostHeader);
-            };
+            }
 
             if (updateHostHeader === undefined || updateHostHeader === true) {
                 // If updateHostHeader is true, or just not specified, match the new target
@@ -533,7 +533,7 @@ export class PassThroughHandler extends PassThroughHandlerDefinition {
                 }
 
                 let replacedBody = originalBody;
-                for (let [match, result] of matchReplaceBody) {
+                for (const [match, result] of matchReplaceBody) {
                     replacedBody = replacedBody!.replace(match, result);
                 }
 
@@ -591,7 +591,7 @@ export class PassThroughHandler extends PassThroughHandlerDefinition {
             reqUrl = modifiedReq?.url || reqUrl;
 
             headersManuallyModified = !!modifiedReq?.headers;
-            let headers = modifiedReq?.headers || clientReq.headers;
+            const headers = modifiedReq?.headers || clientReq.headers;
 
             Object.assign(headers,
                 isH2Downstream
@@ -645,7 +645,7 @@ export class PassThroughHandler extends PassThroughHandlerDefinition {
         // and we can't use ALPN to detect HTTP/2 support cleanly.
         let shouldTryH2Upstream = isH2Downstream && protocol === 'https:';
 
-        const effectivePort = !!port
+        const effectivePort = port
             ? parseInt(port, 10)
             : (protocol === 'https:' ? 443 : 80);
 
@@ -679,7 +679,7 @@ export class PassThroughHandler extends PassThroughHandlerDefinition {
             shouldTryH2Upstream = false;
         }
 
-        let makeRequest = (
+        const makeRequest = (
             shouldTryH2Upstream
                 ? (options: any, cb: any) =>
                     h2Client.auto(options, cb).catch((e) => {
@@ -814,7 +814,7 @@ export class PassThroughHandler extends PassThroughHandlerDefinition {
                         }
 
                         let replacedBody = originalBody;
-                        for (let [match, result] of matchReplaceBody) {
+                        for (const [match, result] of matchReplaceBody) {
                             replacedBody = replacedBody!.replace(match, result);
                         }
 

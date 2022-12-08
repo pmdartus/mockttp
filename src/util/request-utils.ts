@@ -168,7 +168,7 @@ const parseBodyStream = (bodyStream: stream.Readable, maxSize: number, getHeader
     let bufferPromise: BufferInProgress | null = null;
     let completedBuffer: Buffer | null = null;
 
-    let body = {
+    const body = {
         // Returns a stream for the full body, not the live streaming body.
         // Each call creates a new stream, which starts with the already seen
         // and buffered data, and then continues with the live stream, if active.
@@ -259,7 +259,7 @@ export const parseRequestBody = (
     req: http.IncomingMessage | http2.Http2ServerRequest,
     options: { maxSize: number }
 ) => {
-    let transformedRequest = <OngoingRequest> <any> req;
+    const transformedRequest = <OngoingRequest> <any> req;
     transformedRequest.body = parseBodyStream(req, options.maxSize, () => req.headers);
 };
 
@@ -306,7 +306,7 @@ export function trackResponse(
     tags: string[],
     options: { maxSize: number }
 ): OngoingResponse {
-    let trackedResponse = <OngoingResponse> response;
+    const trackedResponse = <OngoingResponse> response;
 
     trackedResponse.timingEvents = timingEvents;
     trackedResponse.tags = tags;
@@ -394,7 +394,7 @@ export function trackResponse(
         trackedResponse.write = originalWrite;
 
         trackingStream.end.apply(trackingStream, args);
-        let result = originalEnd.apply(this, args);
+        const result = originalEnd.apply(this, args);
 
         trackedResponse.write = trackingWrite;
         return result;

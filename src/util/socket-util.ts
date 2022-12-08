@@ -152,7 +152,7 @@ export function resetOrDestroy(requestOrSocket:
             socket.destroy();
         }
     }
-};
+}
 
 export function buildSocketEventData(socket: net.Socket & Partial<tls.TLSSocket>): TlsConnectionEvent {
     const timingInfo = socket.__timingInfo ||

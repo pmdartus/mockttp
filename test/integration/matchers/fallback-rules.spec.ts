@@ -12,9 +12,9 @@ describe("Fallback rules", () => {
     it("should return an explanation if no fallback rule is specifically configured", async () => {
         await server.forGet('/specific-endpoint').thenReply(404, "Mock error response");
 
-        let response = await fetch(server.urlFor("/unmocked-endpoint"));
+        const response = await fetch(server.urlFor("/unmocked-endpoint"));
 
-        let text = await response.text();
+        const text = await response.text();
         expect(text).to.include(`No rules were found matching this request.`);
     });
 
@@ -22,9 +22,9 @@ describe("Fallback rules", () => {
         await server.forGet('/specific-endpoint').thenReply(404, "Mock error response");
         await server.forUnmatchedRequest().thenReply(200, "Fallback response");
 
-        let response = await fetch(server.urlFor("/unmocked-endpoint"));
+        const response = await fetch(server.urlFor("/unmocked-endpoint"));
 
-        let text = await response.text();
+        const text = await response.text();
         expect(text).to.equal('Fallback response');
     });
 
@@ -32,9 +32,9 @@ describe("Fallback rules", () => {
         await server.forGet('/specific-endpoint').thenReply(404, "Mock error response");
         await server.forUnmatchedRequest().thenReply(200, "Fallback response");
 
-        let response = await fetch(server.urlFor("/specific-endpoint"));
+        const response = await fetch(server.urlFor("/specific-endpoint"));
 
-        let text = await response.text();
+        const text = await response.text();
         expect(text).to.equal('Mock error response');
     });
 
@@ -43,10 +43,10 @@ describe("Fallback rules", () => {
         await server.forUnmatchedRequest().thenReply(200, "Fallback response");
 
         await fetch(server.urlFor("/specific-endpoint"));
-        let response = await fetch(server.urlFor("/specific-endpoint"));
+        const response = await fetch(server.urlFor("/specific-endpoint"));
 
         // The first rule was matched before, but is still valid because it's not explicitly once() or similar.
-        let text = await response.text();
+        const text = await response.text();
         expect(text).to.equal('Mock error response');
     });
 
@@ -54,14 +54,14 @@ describe("Fallback rules", () => {
         await server.forGet('/specific-endpoint').once().thenReply(404, "Mock error response");
         await server.forUnmatchedRequest().thenReply(200, "Fallback response");
 
-        let response1 = await fetch(server.urlFor("/specific-endpoint"));
-        let response2 = await fetch(server.urlFor("/specific-endpoint"));
+        const response1 = await fetch(server.urlFor("/specific-endpoint"));
+        const response2 = await fetch(server.urlFor("/specific-endpoint"));
 
-        let text1 = await response1.text();
+        const text1 = await response1.text();
         expect(text1).to.equal('Mock error response');
 
         // Initial rule is once(), so its fully completed here, and no longer reacts:
-        let text2 = await response2.text();
+        const text2 = await response2.text();
         expect(text2).to.equal('Fallback response');
     });
 
@@ -73,9 +73,9 @@ describe("Fallback rules", () => {
         await fetch(server.urlFor("/unmocked-endpoint"));
         await fetch(server.urlFor("/unmocked-endpoint"));
         await fetch(server.urlFor("/unmocked-endpoint"));
-        let response = await fetch(server.urlFor("/unmocked-endpoint"));
+        const response = await fetch(server.urlFor("/unmocked-endpoint"));
 
-        let text = await response.text();
+        const text = await response.text();
         expect(text).to.equal('Fallback response');
     });
 

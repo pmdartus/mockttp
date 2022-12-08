@@ -259,7 +259,7 @@ export class ClientServerChannel extends Duplex {
 
     // Shuts down the channel. Only needs to be called on one side, the other side
     // will be shut down automatically when it receives DISPOSE_MESSAGE.
-    dispose(disposeReceived: boolean = false) {
+    dispose(disposeReceived = false) {
         this.on('error', () => {}); // Dispose is best effort - we don't care about errors
 
         // Only one side needs to send a dispose - we send first if we haven't seen one.

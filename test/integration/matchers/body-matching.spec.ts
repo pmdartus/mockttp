@@ -5,7 +5,7 @@ import { getLocal } from "../../..";
 import { expect, fetch, Headers, delay, nodeOnly } from "../../test-utils";
 
 describe("Body matching", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());

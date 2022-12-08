@@ -19,7 +19,7 @@ import { ClientError } from "../../../dist/types";
 
 describe("Client error subscription", () => {
     describe("with a local HTTP server", () => {
-        let server = getLocal();
+        const server = getLocal();
 
         beforeEach(() => server.start());
 
@@ -31,7 +31,7 @@ describe("Client error subscription", () => {
         });
 
         it("should report error responses from header overflows", async () => {
-            let errorPromise = getDeferred<ClientError>();
+            const errorPromise = getDeferred<ClientError>();
             await server.on('client-error', (e) => errorPromise.resolve(e));
 
             fetch(server.urlFor("/mocked-endpoint"), {
@@ -40,7 +40,7 @@ describe("Client error subscription", () => {
                 }
             }).catch(() => {});
 
-            let clientError = await errorPromise;
+            const clientError = await errorPromise;
 
             expect(clientError.errorCode).to.equal("HPE_HEADER_OVERFLOW");
             expect(clientError.request.method).to.equal("GET");
@@ -76,12 +76,12 @@ describe("Client error subscription", () => {
 
         nodeOnly(() => {
             it("should report error responses from invalid HTTP versions", async () => {
-                let errorPromise = getDeferred<ClientError>();
+                const errorPromise = getDeferred<ClientError>();
                 await server.on('client-error', (e) => errorPromise.resolve(e));
 
                 sendRawRequest(server, 'POST https://example.com HTTP/0\r\n\r\n');
 
-                let clientError = await errorPromise;
+                const clientError = await errorPromise;
 
                 expect(clientError.errorCode).to.equal("HPE_INVALID_VERSION");
                 expect(clientError.request.method).to.equal("POST");
@@ -96,12 +96,12 @@ describe("Client error subscription", () => {
             });
 
             it("should report error responses from unparseable requests", async () => {
-                let errorPromise = getDeferred<ClientError>();
+                const errorPromise = getDeferred<ClientError>();
                 await server.on('client-error', (e) => errorPromise.resolve(e));
 
                 sendRawRequest(server, '?? ??\r\n\r\n');
 
-                let clientError = await errorPromise;
+                const clientError = await errorPromise;
 
                 expect(clientError.errorCode).to.equal("HPE_INVALID_METHOD");
                 expect(clientError.request.method).to.equal("??");
@@ -114,12 +114,12 @@ describe("Client error subscription", () => {
             });
 
             it("should notify for incomplete requests", async () => {
-                let errorPromise = getDeferred<ClientError>();
+                const errorPromise = getDeferred<ClientError>();
                 await server.on('client-error', (e) => errorPromise.resolve(e));
 
                 sendRawRequest(server, 'GET /');
 
-                let clientError = await errorPromise;
+                const clientError = await errorPromise;
 
                 expect(clientError.errorCode).to.equal("HPE_INVALID_EOF_STATE");
 
@@ -136,7 +136,7 @@ describe("Client error subscription", () => {
     });
 
     describe("with a local HTTPS server", () => {
-        let server = getLocal({
+        const server = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'
@@ -149,7 +149,7 @@ describe("Client error subscription", () => {
         const expectNoTlsErrors = watchForEvent('tls-client-error', server);
 
         it("should report error responses from header overflows with plain HTTP", async () => {
-            let errorPromise = getDeferred<ClientError>();
+            const errorPromise = getDeferred<ClientError>();
             await server.on('client-error', (e) => errorPromise.resolve(e));
 
             const plainHttpUrl = server.urlFor("/mocked-endpoint").replace(/^https/, 'http');
@@ -160,7 +160,7 @@ describe("Client error subscription", () => {
                 }
             }).catch(() => {});
 
-            let clientError = await errorPromise;
+            const clientError = await errorPromise;
 
             expect(clientError.errorCode).to.equal("HPE_HEADER_OVERFLOW");
             expect(clientError.request.method).to.equal("GET");
@@ -183,7 +183,7 @@ describe("Client error subscription", () => {
         nodeOnly(() => {
             it("should report error responses from header overflows", async () => {
                 // Skipped in browsers, as they upgrade to HTTP/2, and header overflows seems unsupported
-                let errorPromise = getDeferred<ClientError>();
+                const errorPromise = getDeferred<ClientError>();
                 await server.on('client-error', (e) => errorPromise.resolve(e));
 
                 fetch(server.urlFor("/mocked-endpoint"), {
@@ -195,7 +195,7 @@ describe("Client error subscription", () => {
                     }
                 }).catch(() => {});
 
-                let clientError = await errorPromise;
+                const clientError = await errorPromise;
 
                 expect(clientError.errorCode).to.equal("HPE_HEADER_OVERFLOW");
                 expect(clientError.request.protocol).to.equal('https');
@@ -239,12 +239,12 @@ describe("Client error subscription", () => {
             });
 
             it("should report error responses from invalid HTTP methods", async () => {
-                let errorPromise = getDeferred<ClientError>();
+                const errorPromise = getDeferred<ClientError>();
                 await server.on('client-error', (e) => errorPromise.resolve(e));
 
                 sendRawRequest(server, 'QWE https://example.com HTTP/1.1\r\n\r\n');
 
-                let clientError = await errorPromise;
+                const clientError = await errorPromise;
 
                 expect(clientError.errorCode).to.equal("HPE_INVALID_METHOD");
                 expect(clientError.request.method).to.equal("QWE");
@@ -319,7 +319,7 @@ describe("Client error subscription", () => {
                 });
 
                 it("should report error responses from HTTP-proxied header overflows", async () => {
-                    let errorPromise = getDeferred<ClientError>();
+                    const errorPromise = getDeferred<ClientError>();
                     await server.on('client-error', (e) => errorPromise.resolve(e));
                     await server.forGet("http://example.com/endpoint").thenReply(200, "Mock data");
 
@@ -336,7 +336,7 @@ describe("Client error subscription", () => {
 
                     expect(response.status).to.equal(431);
 
-                    let clientError = await errorPromise;
+                    const clientError = await errorPromise;
 
                     expect(clientError.errorCode).to.equal("HPE_HEADER_OVERFLOW");
                     expect(clientError.request.method).to.equal("GET");
@@ -353,7 +353,7 @@ describe("Client error subscription", () => {
                 });
 
                 it("should report error responses from HTTPS-proxied header overflows", async () => {
-                    let errorPromise = getDeferred<ClientError>();
+                    const errorPromise = getDeferred<ClientError>();
                     await server.on('client-error', (e) => errorPromise.resolve(e));
                     await server.forGet("https://example.com/endpoint").thenReply(200, "Mock data");
 
@@ -373,7 +373,7 @@ describe("Client error subscription", () => {
 
                     expect(response.status).to.equal(431);
 
-                    let clientError = await errorPromise;
+                    const clientError = await errorPromise;
 
                     expect(clientError.errorCode).to.equal("HPE_HEADER_OVERFLOW");
 

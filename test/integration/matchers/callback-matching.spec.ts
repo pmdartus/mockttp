@@ -2,7 +2,7 @@ import { CompletedRequest, getLocal } from "../../..";
 import { expect, fetch } from "../../test-utils";
 
 describe("Request callback matching", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -14,7 +14,7 @@ describe("Request callback matching", function () {
             return true;
         }).thenReply(200, 'Mocked response');
 
-        let result = await fetch(server.urlFor('/abc'), {
+        const result = await fetch(server.urlFor('/abc'), {
             method: 'POST',
             body: '{"username": "test", "passwd": "test"}'
         });
@@ -31,7 +31,7 @@ describe("Request callback matching", function () {
             return body?.username === 'test';
         }).thenReply(200, 'Mocked response');
 
-        let result = await fetch(server.urlFor('/abc'), {
+        const result = await fetch(server.urlFor('/abc'), {
             method: 'POST',
             body: '{"username": "test", "passwd": "test"}'
         });
@@ -44,7 +44,7 @@ describe("Request callback matching", function () {
             return false;
         }).thenReply(200, 'Mocked response');
 
-        let result = await fetch(server.urlFor('/abc'));
+        const result = await fetch(server.urlFor('/abc'));
 
         await expect(result).to.have.status(503);
     });

@@ -17,6 +17,7 @@ module.exports = {
         // Types
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/ban-types": "off",
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-inferrable-types": "off"
     }
 };

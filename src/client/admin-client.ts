@@ -134,7 +134,7 @@ async function requestFromAdminServer<T>(serverUrl: string, path: string, option
     }
 
     if (response.status >= 400) {
-        let body = await response.text();
+        const body = await response.text();
 
         let jsonBody: { error?: string } | null = null;
         try {
@@ -202,7 +202,7 @@ export class AdminClient<Plugins extends { [key: string]: AdminPlugin<any, any> 
     private adminServerSchema: SchemaIntrospector | undefined;
     private adminServerMetadata: PluginClientResponsesMap<Plugins> | undefined;
 
-    private debug: boolean = false;
+    private debug = false;
 
     // True if server is entirely initialized, false if it's entirely shut down, or a promise
     // that resolves to one or the other if it's currently changing state.
@@ -331,8 +331,8 @@ export class AdminClient<Plugins extends { [key: string]: AdminPlugin<any, any> 
         // Must check for session URL, not this.running, or we can't send the /stop request during shutdown!
         if (!this.adminSessionBaseUrl) throw new Error('Not connected to mock server');
 
-        let url = this.adminSessionBaseUrl + path;
-        let response = await fetch(url, mergeClientOptions(options, this.adminClientOptions.requestOptions));
+        const url = this.adminSessionBaseUrl + path;
+        const response = await fetch(url, mergeClientOptions(options, this.adminClientOptions.requestOptions));
 
         if (response.status >= 400) {
             if (this.debug) console.error(`Remote client server request failed with status ${response.status}`);
@@ -593,7 +593,7 @@ export class AdminClient<Plugins extends { [key: string]: AdminPlugin<any, any> 
 
         // This isn't 100% correct (you can be WS-connected, but still negotiating some GQL
         // setup) but it's good enough for our purposes (knowing-ish if the connection worked).
-        let isConnected = !!this.subscriptionClient!.client;
+        const isConnected = !!this.subscriptionClient!.client;
 
         this.subscriptionClient!.request(query).subscribe({
             next: async (value) => {
@@ -638,7 +638,7 @@ export class AdminClient<Plugins extends { [key: string]: AdminPlugin<any, any> 
             return [];
         }
 
-        let result = await this.queryMockServer<{
+        const result = await this.queryMockServer<{
             ruleParameterKeys: string[]
         }>(
             `query GetRuleParameterNames {

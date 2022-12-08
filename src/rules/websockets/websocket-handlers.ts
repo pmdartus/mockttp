@@ -269,7 +269,7 @@ export class PassThroughWebSocketHandler extends PassThroughWebSocketHandlerDefi
                 // Should never happen really, but just in case:
                 hostHeader = [hostHeaderName, hostname!];
                 rawHeaders.unshift(hostHeader);
-            };
+            }
 
             if (updateHostHeader === undefined || updateHostHeader === true) {
                 // If updateHostHeader is true, or just not specified, match the new target
@@ -321,7 +321,7 @@ export class PassThroughWebSocketHandler extends PassThroughWebSocketHandlerDefi
             ? { ca: trustedCerts }
             : {};
 
-        const effectivePort = !!parsedUrl.port
+        const effectivePort = parsedUrl.port
             ? parseInt(parsedUrl.port, 10)
             : parsedUrl.protocol == 'wss:' ? 443 : 80;
 

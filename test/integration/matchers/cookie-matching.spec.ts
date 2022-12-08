@@ -27,7 +27,7 @@ const requestWithCookies = async (url: string, ...cookies: string[]) => {
 };
 
 describe("Cookie matching", function () {
-    let server = getLocal({ cors: false });
+    const server = getLocal({ cors: false });
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());

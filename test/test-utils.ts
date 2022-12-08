@@ -51,7 +51,7 @@ function getGlobalFetch() {
     };
 }
 
-let fetchImplementation = isNode ? CrossFetch : getGlobalFetch();
+const fetchImplementation = isNode ? CrossFetch : getGlobalFetch();
 
 export const fetch = fetchImplementation.fetch;
 

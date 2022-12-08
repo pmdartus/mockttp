@@ -11,7 +11,7 @@ export type CAOptions = (CertDataOptions | CertPathOptions);
 export interface CertDataOptions extends BaseCAOptions {
     key: string;
     cert: string;
-};
+}
 
 export interface CertPathOptions extends BaseCAOptions {
     keyPath: string;
@@ -118,7 +118,7 @@ export async function generateCACertificate(options: {
 }
 
 export function generateSPKIFingerprint(certPem: PEM) {
-    let cert = pki.certificateFromPem(certPem.toString('utf8'));
+    const cert = pki.certificateFromPem(certPem.toString('utf8'));
     return encode64(
         pki.getPublicKeyFingerprint(cert.publicKey, {
             type: 'SubjectPublicKeyInfo',
@@ -214,7 +214,7 @@ export class CA {
             domain = `*.${otherParts.join('.')}`;
         }
 
-        let cert = pki.createCertificate();
+        const cert = pki.createCertificate();
 
         cert.publicKey = KEY_PAIR!.publicKey;
         cert.serialNumber = generateSerialNumber();

@@ -19,7 +19,7 @@ import {
 describe("WebSocket subscriptions", () => {
     describe("with a local HTTP server", () => {
 
-        let server = getLocal();
+        const server = getLocal();
 
         beforeEach(() => server.start());
         afterEach(() => server.stop());
@@ -29,7 +29,7 @@ describe("WebSocket subscriptions", () => {
             it("should fire websocket-request when a websocket upgrade is attempted", async () => {
                 await server.forAnyWebSocket().thenPassivelyListen();
 
-                let eventPromise = getDeferred<CompletedRequest>();
+                const eventPromise = getDeferred<CompletedRequest>();
                 await server.on('websocket-request', (r) => eventPromise.resolve(r));
 
                 new WebSocket(`ws://localhost:${server.port}/qwe`);
@@ -43,10 +43,10 @@ describe("WebSocket subscriptions", () => {
             it("should fire websocket-accepted when a websocket upgrade is completed", async () => {
                 await server.forAnyWebSocket().thenPassivelyListen();
 
-                let requestPromise = getDeferred<CompletedRequest>();
+                const requestPromise = getDeferred<CompletedRequest>();
                 await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                let upgradePromise = getDeferred<CompletedResponse>();
+                const upgradePromise = getDeferred<CompletedResponse>();
                 await server.on('websocket-accepted', (r) => upgradePromise.resolve(r));
 
                 new WebSocket(`ws://localhost:${server.port}/qwe`);
@@ -66,10 +66,10 @@ describe("WebSocket subscriptions", () => {
             it("should fire websocket-message-received events for received data", async () => {
                 await server.forAnyWebSocket().thenPassivelyListen();
 
-                let requestPromise = getDeferred<CompletedRequest>();
+                const requestPromise = getDeferred<CompletedRequest>();
                 await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                let eventPromise = getDeferred<WebSocketMessage>();
+                const eventPromise = getDeferred<WebSocketMessage>();
                 await server.on('websocket-message-received', (d) => eventPromise.resolve(d));
 
                 const ws = new WebSocket(`ws://localhost:${server.port}/qwe`);
@@ -95,10 +95,10 @@ describe("WebSocket subscriptions", () => {
             it("should fire websocket-message-sent events for received data", async () => {
                 await server.forAnyWebSocket().thenEcho();
 
-                let requestPromise = getDeferred<CompletedRequest>();
+                const requestPromise = getDeferred<CompletedRequest>();
                 await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                let eventPromise = getDeferred<WebSocketMessage>();
+                const eventPromise = getDeferred<WebSocketMessage>();
                 await server.on('websocket-message-sent', (d) => eventPromise.resolve(d));
 
                 const ws = new WebSocket(`ws://localhost:${server.port}/qwe`);
@@ -128,10 +128,10 @@ describe("WebSocket subscriptions", () => {
             it("should fire websocket-close events for cleanly closed connections", async () => {
                 await server.forAnyWebSocket().thenPassivelyListen();
 
-                let requestPromise = getDeferred<CompletedRequest>();
+                const requestPromise = getDeferred<CompletedRequest>();
                 await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                let closePromise = getDeferred<WebSocketClose>();
+                const closePromise = getDeferred<WebSocketClose>();
                 await server.on('websocket-close', (r) => closePromise.resolve(r));
 
                 let seenAbort = false;
@@ -161,10 +161,10 @@ describe("WebSocket subscriptions", () => {
             it("should fire websocket-close events with undefined codes, if no code was sent", async () => {
                 await server.forAnyWebSocket().thenPassivelyListen();
 
-                let requestPromise = getDeferred<CompletedRequest>();
+                const requestPromise = getDeferred<CompletedRequest>();
                 await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                let closePromise = getDeferred<WebSocketClose>();
+                const closePromise = getDeferred<WebSocketClose>();
                 await server.on('websocket-close', (r) => closePromise.resolve(r));
 
                 let seenAbort = false;
@@ -194,10 +194,10 @@ describe("WebSocket subscriptions", () => {
             it("should fire response events for refused upgrade attempts", async () => {
                 await server.forAnyWebSocket().thenRejectConnection(403);
 
-                let requestPromise = getDeferred<CompletedRequest>();
+                const requestPromise = getDeferred<CompletedRequest>();
                 await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                let responsePromise = getDeferred<CompletedResponse>();
+                const responsePromise = getDeferred<CompletedResponse>();
                 await server.on('response', (r) => responsePromise.resolve(r));
 
                 let seenClose = false;
@@ -227,10 +227,10 @@ describe("WebSocket subscriptions", () => {
                 it("should fire abort events for aborted upgrade attempts", async () => {
                     await server.forAnyWebSocket().thenTimeout();
 
-                    let requestPromise = getDeferred<CompletedRequest>();
+                    const requestPromise = getDeferred<CompletedRequest>();
                     await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                    let abortPromise = getDeferred<InitiatedRequest>();
+                    const abortPromise = getDeferred<InitiatedRequest>();
                     await server.on('abort', (r) => abortPromise.resolve(r));
 
                     let seenClose = false;
@@ -264,10 +264,10 @@ describe("WebSocket subscriptions", () => {
                 it("should fire abort events for uncleanly closed connections", async () => {
                     await server.forAnyWebSocket().thenPassivelyListen();
 
-                    let requestPromise = getDeferred<CompletedRequest>();
+                    const requestPromise = getDeferred<CompletedRequest>();
                     await server.on('websocket-request', (r) => requestPromise.resolve(r));
 
-                    let abortPromise = getDeferred<InitiatedRequest>();
+                    const abortPromise = getDeferred<InitiatedRequest>();
                     await server.on('abort', (r) => abortPromise.resolve(r));
 
                     let seenClose = false;

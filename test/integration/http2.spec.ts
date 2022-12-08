@@ -373,7 +373,7 @@ nodeOnly(() => {
             it("should include request metadata in events for proxied HTTP/2 requests", async function() {
                 if (!semver.satisfies(process.version, H2_TLS_ON_TLS_SUPPORTED)) this.skip();
 
-                let seenRequestPromise = getDeferred<CompletedRequest>();
+                const seenRequestPromise = getDeferred<CompletedRequest>();
                 await server.on('request', (r) => seenRequestPromise.resolve(r));
 
                 await server.forGet('https://example.com/mocked-endpoint')

@@ -43,18 +43,18 @@ const INCONSISTENT_HEADERS = [
 
 describe("Request initiated subscriptions", () => {
     describe("with a local HTTP server", () => {
-        let server = getLocal();
+        const server = getLocal();
 
         beforeEach(() => server.start());
         afterEach(() => server.stop());
 
         it("should notify with request details as soon as they're ready", async () => {
-            let seenRequestPromise = getDeferred<InitiatedRequest>();
+            const seenRequestPromise = getDeferred<InitiatedRequest>();
             await server.on('request-initiated', (r) => seenRequestPromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"), { method: 'POST', body: 'body-text' });
 
-            let seenRequest = await seenRequestPromise;
+            const seenRequest = await seenRequestPromise;
             expect(seenRequest.method).to.equal('POST');
             expect(seenRequest.protocol).to.equal('http');
             expect(seenRequest.httpVersion).to.equal('1.1');
@@ -78,12 +78,12 @@ describe("Request initiated subscriptions", () => {
 
         nodeOnly(() => {
             it("should notify with request details before the body is received", async () => {
-                let seenInitialRequestPromise = getDeferred<InitiatedRequest>();
+                const seenInitialRequestPromise = getDeferred<InitiatedRequest>();
                 await server.on('request-initiated', (r) => seenInitialRequestPromise.resolve(r));
-                let seenCompletedRequestPromise = getDeferred<CompletedRequest>();
+                const seenCompletedRequestPromise = getDeferred<CompletedRequest>();
                 await server.on('request', (r) => seenCompletedRequestPromise.resolve(r));
 
-                let req = http.request({
+                const req = http.request({
                     method: 'POST',
                     hostname: 'localhost',
                     port: server.port
@@ -92,7 +92,7 @@ describe("Request initiated subscriptions", () => {
                 req.write('start body\n');
                 // Note: we haven't called .end() yet, the request is still going
 
-                let seenInitialRequest = await seenInitialRequestPromise;
+                const seenInitialRequest = await seenInitialRequestPromise;
                 expect(seenInitialRequest.method).to.equal('POST');
                 expect(seenInitialRequest.protocol).to.equal('http');
                 expect(seenInitialRequest.httpVersion).to.equal('1.1');
@@ -100,12 +100,12 @@ describe("Request initiated subscriptions", () => {
                 expect((seenInitialRequest as any).body).to.equal(undefined);
 
                 req.end('end body');
-                let seenCompletedRequest = await seenCompletedRequestPromise;
+                const seenCompletedRequest = await seenCompletedRequestPromise;
                 expect(await seenCompletedRequest.body.getText()).to.equal('start body\nend body');
             });
 
             it("should include the raw request headers", async () => {
-                let seenRequestPromise = getDeferred<InitiatedRequest>();
+                const seenRequestPromise = getDeferred<InitiatedRequest>();
                 await server.on('request-initiated', (r) => seenRequestPromise.resolve(r));
 
                 http.request({
@@ -119,7 +119,7 @@ describe("Request initiated subscriptions", () => {
                     ] as any
                 }).end();
 
-                let seenRequest = await seenRequestPromise;
+                const seenRequest = await seenRequestPromise;
 
                 // Raw format:
                 expect(seenRequest.rawHeaders).to.deep.equal([
@@ -140,7 +140,7 @@ describe("Request initiated subscriptions", () => {
     });
 
     describe("with a local HTTPS server", () => {
-        let server = getLocal({
+        const server = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'
@@ -151,12 +151,12 @@ describe("Request initiated subscriptions", () => {
         afterEach(() => server.stop());
 
         it("should notify with request details as soon as they're ready", async () => {
-            let seenRequestPromise = getDeferred<InitiatedRequest>();
+            const seenRequestPromise = getDeferred<InitiatedRequest>();
             await server.on('request-initiated', (r) => seenRequestPromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"), { method: 'POST', body: 'body-text' });
 
-            let seenRequest = await seenRequestPromise;
+            const seenRequest = await seenRequestPromise;
             expect(seenRequest.method).to.equal('POST');
             expect(seenRequest.protocol).to.equal('https');
             expect(seenRequest.httpVersion).to.equal('1.1');
@@ -176,8 +176,8 @@ describe("Request initiated subscriptions", () => {
 
     nodeOnly(() => {
         describe("with a remote client", () => {
-            let adminServer = getAdminServer();
-            let client = getRemote();
+            const adminServer = getAdminServer();
+            const client = getRemote();
 
             before(() => adminServer.start());
             after(() => adminServer.stop());
@@ -186,12 +186,12 @@ describe("Request initiated subscriptions", () => {
             afterEach(() => client.stop());
 
             it("should notify with request details as soon as they're ready", async () => {
-                let seenRequestPromise = getDeferred<InitiatedRequest>();
+                const seenRequestPromise = getDeferred<InitiatedRequest>();
                 await client.on('request-initiated', (r) => seenRequestPromise.resolve(r));
 
                 fetch(client.urlFor("/mocked-endpoint"), { method: 'POST', body: 'body-text' });
 
-                let seenRequest = await seenRequestPromise;
+                const seenRequest = await seenRequestPromise;
                 expect(seenRequest.method).to.equal('POST');
                 expect(seenRequest.httpVersion).to.equal('1.1');
                 expect(seenRequest.url).to.equal(client.urlFor("/mocked-endpoint"));
@@ -199,7 +199,7 @@ describe("Request initiated subscriptions", () => {
             });
 
             it("should include the raw request headers", async () => {
-                let seenRequestPromise = getDeferred<InitiatedRequest>();
+                const seenRequestPromise = getDeferred<InitiatedRequest>();
                 await client.on('request-initiated', (r) => seenRequestPromise.resolve(r));
 
                 http.request({
@@ -213,7 +213,7 @@ describe("Request initiated subscriptions", () => {
                     ] as any
                 }).end();
 
-                let seenRequest = await seenRequestPromise;
+                const seenRequest = await seenRequestPromise;
 
                 // Raw format:
                 expect(seenRequest.rawHeaders).to.deep.equal([
@@ -236,18 +236,18 @@ describe("Request initiated subscriptions", () => {
 
 describe("Request subscriptions", () => {
     describe("with a local server", () => {
-        let server = getLocal();
+        const server = getLocal();
 
         beforeEach(() => server.start());
         afterEach(() => server.stop());
 
         it("should notify with request details & body when a request is ready", async () => {
-            let seenRequestPromise = getDeferred<CompletedRequest>();
+            const seenRequestPromise = getDeferred<CompletedRequest>();
             await server.on('request', (r) => seenRequestPromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"), { method: 'POST', body: 'body-text' });
 
-            let seenRequest = await seenRequestPromise;
+            const seenRequest = await seenRequestPromise;
             expect(seenRequest.method).to.equal('POST');
             expect(seenRequest.protocol).to.equal('http');
             expect(seenRequest.httpVersion).to.equal('1.1');
@@ -262,23 +262,23 @@ describe("Request subscriptions", () => {
         });
 
         it("should include the matched rule id", async () => {
-            let seenRequestPromise = getDeferred<CompletedRequest>();
+            const seenRequestPromise = getDeferred<CompletedRequest>();
             await server.on('request', (r) => seenRequestPromise.resolve(r));
-            let endpoint = await server.forGet('/').thenReply(200);
+            const endpoint = await server.forGet('/').thenReply(200);
 
             fetch(server.urlFor("/"));
 
-            let { matchedRuleId } = await seenRequestPromise;
+            const { matchedRuleId } = await seenRequestPromise;
             expect(matchedRuleId).to.equal(endpoint.id);
         });
 
         it("should include timing information", async () => {
-            let seenRequestPromise = getDeferred<CompletedRequest>();
+            const seenRequestPromise = getDeferred<CompletedRequest>();
             await server.on('request', (r) => seenRequestPromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"), { method: 'POST', body: 'body-text' });
 
-            let { timingEvents } = <{ timingEvents: TimingEvents }> await seenRequestPromise;
+            const { timingEvents } = <{ timingEvents: TimingEvents }> await seenRequestPromise;
             expect(timingEvents.startTime).to.be.a('number');
             expect(timingEvents.startTimestamp).to.be.a('number');
             expect(timingEvents.bodyReceivedTimestamp).to.be.a('number');
@@ -289,12 +289,12 @@ describe("Request subscriptions", () => {
 
         nodeOnly(() => {
             it("should report unnormalized URLs", async () => {
-                let seenRequestPromise = getDeferred<CompletedRequest>();
+                const seenRequestPromise = getDeferred<CompletedRequest>();
                 await server.on('request', (r) => seenRequestPromise.resolve(r));
 
                 sendRawRequest(server, 'GET http://example.com HTTP/1.1\n\n');
 
-                let seenRequest = await seenRequestPromise;
+                const seenRequest = await seenRequestPromise;
                 expect(seenRequest.url).to.equal('http://example.com');
             });
         });
@@ -302,7 +302,7 @@ describe("Request subscriptions", () => {
 
     describe("with a local HTTP server allowing only tiny bodies", () => {
 
-        let server = getLocal({
+        const server = getLocal({
             maxBodySize: 10 // 10 bytes max
         });
 
@@ -310,22 +310,22 @@ describe("Request subscriptions", () => {
         afterEach(() => server.stop());
 
         it("should include tiny bodies in request events", async () => {
-            let seenRequestPromise = getDeferred<CompletedRequest>();
+            const seenRequestPromise = getDeferred<CompletedRequest>();
             await server.on('request', (r) => seenRequestPromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"), { method: 'POST', body: 'TinyReq' });
 
-            let seenRequest = await seenRequestPromise;
+            const seenRequest = await seenRequestPromise;
             expect(await seenRequest.body.getText()).to.equal('TinyReq');
         });
 
         it("should not include larger bodies in request event", async () => {
-            let seenRequestPromise = getDeferred<CompletedRequest>();
+            const seenRequestPromise = getDeferred<CompletedRequest>();
             await server.on('request', (r) => seenRequestPromise.resolve(r));
 
             fetch(server.urlFor("/mocked-endpoint"), { method: 'POST', body: 'Larger request' });
 
-            let seenRequest = await seenRequestPromise;
+            const seenRequest = await seenRequestPromise;
             expect(await seenRequest.body.getText()).to.equal(''); // Omitted
         });
 
@@ -333,8 +333,8 @@ describe("Request subscriptions", () => {
 
     nodeOnly(() => {
         describe("with a remote client", () => {
-            let adminServer = getAdminServer();
-            let client = getRemote();
+            const adminServer = getAdminServer();
+            const client = getRemote();
 
             before(() => adminServer.start());
             after(() => adminServer.stop());
@@ -343,12 +343,12 @@ describe("Request subscriptions", () => {
             afterEach(() => client.stop());
 
             it("should notify with request details after a request is made", async () => {
-                let seenRequestPromise = getDeferred<CompletedRequest>();
+                const seenRequestPromise = getDeferred<CompletedRequest>();
                 await client.on('request', (r) => seenRequestPromise.resolve(r));
 
                 fetch(client.urlFor("/mocked-endpoint"), { method: 'POST', body: 'body-text' });
 
-                let seenRequest = await seenRequestPromise;
+                const seenRequest = await seenRequestPromise;
                 expect(seenRequest.method).to.equal('POST');
                 expect(seenRequest.url).to.equal(
                     `http://localhost:${client.port}/mocked-endpoint`

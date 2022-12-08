@@ -354,7 +354,7 @@ export class AdminServer<Plugins extends { [key: string]: AdminPlugin<any, any> 
                 if (isMatch) {
                     const sessionId = isMatch[1];
 
-                    let wsServer: Ws.Server = isSubscriptionRequest
+                    const wsServer: Ws.Server = isSubscriptionRequest
                         ? this.sessions[sessionId]?.subscriptionServer.server
                         : this.sessions[sessionId]?.streamServer;
 
@@ -425,7 +425,7 @@ export class AdminServer<Plugins extends { [key: string]: AdminPlugin<any, any> 
 
         const streamServer = new Ws.Server({ noServer: true });
         streamServer.on('connection', (ws) => {
-            let newClientStream = Ws.createWebSocketStream(ws, {});
+            const newClientStream = Ws.createWebSocketStream(ws, {});
             wsSocket.pipe(newClientStream).pipe(wsSocket, { end: false });
 
             const unpipe = () => {
@@ -593,7 +593,7 @@ export class AdminServer<Plugins extends { [key: string]: AdminPlugin<any, any> 
                 parseLiteral: parseAnyAst
             })
         };
-    };
+    }
 
     private resetPluginsForSession(sessionId: string) {
         return Promise.all(

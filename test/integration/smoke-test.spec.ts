@@ -3,7 +3,7 @@ import { getLocal } from "../..";
 import { expect, fetch, nodeOnly } from "../test-utils";
 
 describe("Basic HTTP mocking", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -32,7 +32,7 @@ describe("Basic HTTP mocking", function () {
     it("should reject non-matching requests", async () => {
         await server.forGet("/other-endpoint").thenReply(200, "mocked data");
 
-        let result = fetch(server.urlFor("/not-mocked-endpoint"));
+        const result = fetch(server.urlFor("/not-mocked-endpoint"));
 
         await expect(result).to.have.status(503);
         await expect(result).to.have.responseText(/No rules were found matching this request/);
@@ -42,7 +42,7 @@ describe("Basic HTTP mocking", function () {
         it("can proxy requests to made to any other hosts", async () => {
             await server.forGet("http://google.com").thenReply(200, "Not really google");
 
-            let response = fetch("http://google.com", <{}> {
+            const response = fetch("http://google.com", <{}> {
                 agent: new HttpProxyAgent(server.url)
             });
 

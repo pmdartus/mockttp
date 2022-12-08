@@ -2,7 +2,7 @@ import { getLocal } from "../../..";
 import { expect, fetch, Headers } from "../../test-utils";
 
 describe("Header matching", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -14,7 +14,7 @@ describe("Header matching", function () {
     });
 
     it("should match requests with the matching header", async () => {
-        let response = await fetch(server.url, {
+        const response = await fetch(server.url, {
             mode: 'cors', // In a browser, you can only send custom headers with CORS enabled
             headers: new Headers({ "X-Should-Match": "yes" })
         });
@@ -22,7 +22,7 @@ describe("Header matching", function () {
     });
 
     it("should not match requests with no (extra) headers", async () => {
-        let response = await fetch(server.url, {
+        const response = await fetch(server.url, {
             mode: 'cors'
         })
 
@@ -30,7 +30,7 @@ describe("Header matching", function () {
     });
 
     it("should not match requests with the wrong header value", async () => {
-        let response = await fetch(server.url, {
+        const response = await fetch(server.url, {
             mode: 'cors',
             headers: new Headers({ "X-Should-Match": "no" })
         });

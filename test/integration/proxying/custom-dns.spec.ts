@@ -28,8 +28,8 @@ nodeOnly(() => {
             await dnsServer!.destroy();
         });
 
-        let server = getLocal();;
-        let remoteServer = getLocal();
+        const server = getLocal();
+        const remoteServer = getLocal();
 
         beforeEach(async () => {
             await remoteServer.start();

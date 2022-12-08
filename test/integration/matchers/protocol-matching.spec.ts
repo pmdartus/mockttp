@@ -4,7 +4,7 @@ import { getLocal } from "../../..";
 import { expect, fetch, nodeOnly } from "../../test-utils";
 
 describe('Protocol matching', () => {
-    let server = getLocal({
+    const server = getLocal({
         https: {
             keyPath: './test/fixtures/test-ca.key',
             certPath: './test/fixtures/test-ca.pem'
@@ -26,7 +26,7 @@ describe('Protocol matching', () => {
         .withProtocol("https")
         .thenReply(200, 'Mocked response');
 
-        let result = await fetch(server.urlFor("/"));
+        const result = await fetch(server.urlFor("/"));
 
         await expect(result).to.have.responseText('Mocked response');
     });
@@ -36,7 +36,7 @@ describe('Protocol matching', () => {
         .withProtocol("http")
         .thenReply(200, 'Mocked response');
 
-        let result = await fetch(server.urlFor("/"));
+        const result = await fetch(server.urlFor("/"));
 
         expect(result.status).to.equal(503);
     });

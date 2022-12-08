@@ -14,7 +14,7 @@ import {
 describe("HTTP request spying", function () {
 
     describe("using default settings", () => {
-        let server = getLocal();
+        const server = getLocal();
 
         beforeEach(() => server.start());
         afterEach(() => server.stop());
@@ -55,7 +55,7 @@ describe("HTTP request spying", function () {
             .withForm({ a: '1', b: '2' })
             .thenReply(200, "mocked data");
 
-            let form = new URLSearchParams();
+            const form = new URLSearchParams();
             form.set('a', '1');
             form.set('b', '2');
             await fetch(server.urlFor("/mocked-endpoint"), {
@@ -119,7 +119,7 @@ describe("HTTP request spying", function () {
     });
 
     describe("with traffic recording disabled", () => {
-        let server = getLocal({
+        const server = getLocal({
             recordTraffic: false
         });
 

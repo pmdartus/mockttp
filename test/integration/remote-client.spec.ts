@@ -22,7 +22,7 @@ browserOnly(() => {
     describe("Remote browser client with an admin server", function () {
 
         describe("with a default configuration", () => {
-            let mockServer = getLocal();
+            const mockServer = getLocal();
 
             beforeEach(() => mockServer.start());
             afterEach(() => mockServer.stop());
@@ -386,16 +386,16 @@ nodeOnly(() => {
             });
 
             it("should successfully mock requests with live streams", async () => {
-                let stream1 = new PassThrough();
+                const stream1 = new PassThrough();
                 await remoteServer.forGet('/stream').thenStream(200, stream1);
-                let stream2 = new PassThrough();
+                const stream2 = new PassThrough();
                 await remoteServer.forGet('/stream').thenStream(200, stream2);
 
                 stream1.end('Hello');
                 stream2.end('World');
 
-                let response1 = await fetch(remoteServer.urlFor('/stream'));
-                let response2 = await fetch(remoteServer.urlFor('/stream'));
+                const response1 = await fetch(remoteServer.urlFor('/stream'));
+                const response2 = await fetch(remoteServer.urlFor('/stream'));
 
                 await expect(response1).to.have.status(200);
                 await expect(response1).to.have.responseText('Hello');
@@ -507,7 +507,7 @@ nodeOnly(() => {
         });
 
         describe("with a provided default configuration", () => {
-            let server = getAdminServer({
+            const server = getAdminServer({
                 serverDefaults: {
                     https: {
                         keyPath: './test/fixtures/test-ca.key',
@@ -515,7 +515,7 @@ nodeOnly(() => {
                     }
                 }
             });
-            let client = getRemote();
+            const client = getRemote();
 
             before(() => server.start());
             after(() => server.stop());
@@ -534,7 +534,7 @@ nodeOnly(() => {
             // parameter itself dynamically.
             let proxyCallbackCallback: (...args: any) => void;
 
-            let server = getAdminServer({
+            const server = getAdminServer({
                 serverDefaults: {
                     https: {
                         keyPath: './test/fixtures/test-ca.key',
@@ -547,7 +547,7 @@ nodeOnly(() => {
                 }
             });
 
-            let client = getRemote();
+            const client = getRemote();
 
             before(() => server.start());
             after(() => server.stop());
@@ -617,10 +617,10 @@ nodeOnly(() => {
         }
 
         describe("with keep alive configured", () => {
-            let adminServer = getAdminServer({
+            const adminServer = getAdminServer({
                 webSocketKeepAlive: 50
             });
-            let client = getRemote();
+            const client = getRemote();
 
             before(() => adminServer.start());
             after(() => adminServer.stop());
@@ -657,7 +657,7 @@ nodeOnly(() => {
         });
 
         describe("with strict CORS configured", () => {
-            let server = getAdminServer({
+            const server = getAdminServer({
                 corsOptions: {
                     origin: 'https://example.com',
                     strict: true
@@ -804,8 +804,8 @@ nodeOnly(() => {
             afterEach(() => adminServer.stop());
 
             it("should expose events for mock server start & stop", async () => {
-                let startedServers: number[] = [];
-                let stoppedServers: number[] = [];
+                const startedServers: number[] = [];
+                const stoppedServers: number[] = [];
 
                 adminServer.on('mock-session-started', (session) => {
                     startedServers.push(session.http.getMockServer().port)
@@ -839,7 +839,7 @@ nodeOnly(() => {
             it("can handle unexpected subscription disconnections", async () => {
                 await client1.start();
 
-                let seenRequestPromise = getDeferred<CompletedRequest>();
+                const seenRequestPromise = getDeferred<CompletedRequest>();
                 await client1.on('request', (r) => seenRequestPromise.resolve(r));
 
                 // Forcefully kill the /subscription websocket connection, so that all
@@ -893,7 +893,7 @@ nodeOnly(() => {
 
         describe("with no server available", () => {
             it("fails to mock responses", async () => {
-                let client = getRemote();
+                const client = getRemote();
 
                 await expect(client.start())
                     .to.eventually.be.rejectedWith('Failed to connect to admin server at http://localhost:45454');

@@ -26,4 +26,4 @@ export function serializeRuleData<
         handler: serialize(data.handler, stream),
         completionChecker: data.completionChecker && serialize(data.completionChecker, stream)
     } as Serialized<DataFormat>;
-};
+}

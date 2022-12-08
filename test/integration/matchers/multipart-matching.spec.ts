@@ -22,7 +22,7 @@ const fetchWithMultipartForm = (url: string, form: FormData) => {
 }
 
 describe("Multipart form data matching", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -32,7 +32,7 @@ describe("Multipart form data matching", function () {
             .withMultipartForm({ name: 'text-field' })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('text-field', 'text content');
 
         return expect(
@@ -45,7 +45,7 @@ describe("Multipart form data matching", function () {
             .withMultipartForm({ content: 'text content' })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('text-field', 'text content');
 
         return expect(
@@ -60,7 +60,7 @@ describe("Multipart form data matching", function () {
             })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('text-field', 'text content');
 
         return expect(
@@ -73,7 +73,7 @@ describe("Multipart form data matching", function () {
             .withMultipartForm({ filename: 'my-file.txt' })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('file-upload', new File(['file content'], 'my-file.txt'));
 
         return expect(
@@ -86,7 +86,7 @@ describe("Multipart form data matching", function () {
             .withMultipartForm({ content: 'file content' })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('file-upload', new File(['file content'], 'my-file.txt'));
 
         return expect(
@@ -99,7 +99,7 @@ describe("Multipart form data matching", function () {
             .withMultipartForm({ content: Buffer.from('raw content', 'utf8') })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('file-upload', new File([Buffer.from('raw content', 'utf8')], 'my-file.txt'));
 
         return expect(
@@ -114,7 +114,7 @@ describe("Multipart form data matching", function () {
             )
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('wrong-field', 'text content');
 
         return expect(
@@ -127,7 +127,7 @@ describe("Multipart form data matching", function () {
             .withMultipartForm({ filename: 'my-file.txt' })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('file-upload', new File(['file content'], 'wrong-filename.gif'));
 
         return expect(
@@ -142,7 +142,7 @@ describe("Multipart form data matching", function () {
             )
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('text-field', 'wrong content');
 
         return expect(
@@ -155,7 +155,7 @@ describe("Multipart form data matching", function () {
             .withMultipartForm({ content: 'file content' })
             .thenReply(200, "matched");
 
-        let form = new FormData();
+        const form = new FormData();
         form.set('file-upload', new File(['wrong file content'], 'my-file.txt'));
 
         return expect(
@@ -170,7 +170,7 @@ describe("Multipart form data matching", function () {
             )
             .thenReply(200, "matched");
 
-        let form = new URLSearchParams();
+        const form = new URLSearchParams();
         form.set('text-field', 'text content');
 
         return expect(fetch(server.url, {

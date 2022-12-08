@@ -3,7 +3,7 @@ import { expect, fetch } from "../test-utils";
 import * as _ from "lodash";
 
 describe("HTTP mock rule completion", function () {
-    let server = getLocal();
+    const server = getLocal();
 
     beforeEach(() => server.start());
     afterEach(() => server.stop());
@@ -23,7 +23,7 @@ describe("HTTP mock rule completion", function () {
 
         await fetch(server.urlFor("/endpoint"));
         await fetch(server.urlFor("/endpoint"));
-        let thirdResponse = await fetch(server.urlFor("/endpoint"));
+        const thirdResponse = await fetch(server.urlFor("/endpoint"));
         await expect(thirdResponse).to.have.responseText("second response");
     });
 
@@ -32,7 +32,7 @@ describe("HTTP mock rule completion", function () {
         await server.forGet("/endpoint").thenReply(200, "should never be reached");
 
         await fetch(server.urlFor("/endpoint"));
-        let secondResponse = await fetch(server.urlFor("/endpoint"));
+        const secondResponse = await fetch(server.urlFor("/endpoint"));
         await expect(secondResponse).to.have.responseText("endless response");
     });
 
@@ -43,7 +43,7 @@ describe("HTTP mock rule completion", function () {
         await expect(fetch(server.urlFor("/endpoint"))).to.have.responseText("first");
         await expect(fetch(server.urlFor("/endpoint"))).to.have.responseText("second");
 
-        let thirdResult = await fetch(server.urlFor("/endpoint"));
+        const thirdResult = await fetch(server.urlFor("/endpoint"));
 
         await expect(thirdResult.status).to.equal(503);
         await expect(thirdResult).to.have.responseText(/No rules were found matching this request/);
@@ -57,7 +57,7 @@ describe("HTTP mock rule completion", function () {
         await expect(fetch(server.urlFor("/endpoint"))).to.have.responseText("second/third");
         await expect(fetch(server.urlFor("/endpoint"))).to.have.responseText("second/third");
 
-        let fourthResult = await fetch(server.urlFor("/endpoint"));
+        const fourthResult = await fetch(server.urlFor("/endpoint"));
 
         await expect(fourthResult.status).to.equal(503);
         await expect(fourthResult).to.have.responseText(/No rules were found matching this request/);

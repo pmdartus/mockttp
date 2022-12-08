@@ -12,7 +12,7 @@ nodeOnly(() => {
     describe("Mockttp when used as a transforming proxy", function () {
 
         let server: Mockttp;
-        let remoteServer = getLocal();
+        const remoteServer = getLocal();
 
         beforeEach(async () => {
             await remoteServer.start();
@@ -38,7 +38,7 @@ nodeOnly(() => {
                 await remoteServer.forGet('/').thenReply(200, "forwarded response");
                 await server.forAnyRequest().thenForwardTo(remoteServer.url);
 
-                let response = await request.get(server.urlFor("/"));
+                const response = await request.get(server.urlFor("/"));
 
                 expect(response).to.equal('forwarded response');
             });
@@ -47,18 +47,18 @@ nodeOnly(() => {
                 await remoteServer.forGet('/').thenReply(200, "forwarded response");
                 await server.forAnyRequest().thenForwardTo('example.com');
 
-                let response = await request.get(server.urlFor("/"));
+                const response = await request.get(server.urlFor("/"));
 
                 expect(response).to.include('Example Domain');
             });
 
             it("uses the path portion from the original request url", async () => {
-                let remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
+                const remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
                 await server.forAnyRequest().thenForwardTo(remoteServer.url);
 
                 await request.get(server.urlFor("/get"));
 
-                let seenRequests = await remoteEndpointMock.getSeenRequests();
+                const seenRequests = await remoteEndpointMock.getSeenRequests();
                 expect(seenRequests[0].path).to.equal("/get");
             });
 
@@ -70,36 +70,36 @@ nodeOnly(() => {
             });
 
             it("updates the host header by default", async () => {
-                let remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
+                const remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
                 await server.forAnyRequest().thenForwardTo(remoteServer.url);
 
                 await request.get(server.urlFor("/get"));
 
-                let seenRequests = await remoteEndpointMock.getSeenRequests();
+                const seenRequests = await remoteEndpointMock.getSeenRequests();
                 expect(seenRequests[0].headers.host).to.equal(`localhost:${remoteServer.port}`);
             });
 
             it("can skip updating the host header if requested", async () => {
-                let remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
+                const remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
                 await server.forAnyRequest().thenForwardTo(remoteServer.url, {
                     forwarding: { updateHostHeader: false }
                 });
 
                 await request.get(server.urlFor("/get"));
 
-                let seenRequests = await remoteEndpointMock.getSeenRequests();
+                const seenRequests = await remoteEndpointMock.getSeenRequests();
                 expect(seenRequests[0].headers.host).to.equal(`localhost:${server.port}`);
             });
 
             it("can update the host header to a custom value if requested", async () => {
-                let remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
+                const remoteEndpointMock = await remoteServer.forGet('/get').thenReply(200, "mocked data");
                 await server.forAnyRequest().thenForwardTo(remoteServer.url, {
                     forwarding: { updateHostHeader: 'google.com' }
                 });
 
                 await request.get(server.urlFor("/get"));
 
-                let seenRequests = await remoteEndpointMock.getSeenRequests();
+                const seenRequests = await remoteEndpointMock.getSeenRequests();
                 expect(seenRequests[0].headers.host).to.equal('google.com');
             });
         });
@@ -136,7 +136,7 @@ nodeOnly(() => {
                     transformRequest: {}
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -161,7 +161,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -188,7 +188,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -216,7 +216,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -243,7 +243,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -271,7 +271,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -296,7 +296,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -325,7 +325,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1 },
                     json: true
@@ -370,7 +370,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.urlFor("/abc"), {
+                const response = await request.post(remoteServer.urlFor("/abc"), {
                     headers: { 'custom-header': 'a-value' },
                     body: { a: 1, b: 2 },
                     json: true
@@ -399,7 +399,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let rawResponse = await request.post(remoteServer.urlFor("/abc"), {
+                const rawResponse = await request.post(remoteServer.urlFor("/abc"), {
                     headers: {
                         'accept': 'application/json',
                         'content-type': 'application/json',
@@ -448,7 +448,7 @@ nodeOnly(() => {
                     transformResponse: {}
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true
                 });
 
@@ -472,7 +472,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -499,7 +499,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -527,7 +527,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -554,7 +554,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -577,7 +577,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -599,7 +599,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -625,7 +625,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -664,7 +664,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false
                 });
@@ -696,7 +696,7 @@ nodeOnly(() => {
                     }
                 });
 
-                let response = await request.post(remoteServer.url, {
+                const response = await request.post(remoteServer.url, {
                     resolveWithFullResponse: true,
                     simple: false,
                     encoding: null

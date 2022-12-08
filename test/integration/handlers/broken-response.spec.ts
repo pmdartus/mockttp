@@ -18,7 +18,7 @@ describe("Broken response handlers", function () {
 
     describe("for HTTP requests", () => {
 
-        let server = getLocal();
+        const server = getLocal();
 
         beforeEach(() => server.start());
         afterEach(() => server.stop());
@@ -26,7 +26,7 @@ describe("Broken response handlers", function () {
         it("should allow forcibly closing the connection", async () => {
             await server.forGet('/mocked-endpoint').thenCloseConnection();
 
-            let result = await fetch(server.urlFor('/mocked-endpoint')).catch(e => e);
+            const result = await fetch(server.urlFor('/mocked-endpoint')).catch(e => e);
 
             expect(result).to.be.instanceof(Error);
             expect(result.message).to.contain(isNode ? 'socket hang up' : 'Failed to fetch');
@@ -37,7 +37,7 @@ describe("Broken response handlers", function () {
 
             await server.forGet('/mocked-endpoint').thenResetConnection();
 
-            let result = await fetch(server.urlFor('/mocked-endpoint')).catch(e => e);
+            const result = await fetch(server.urlFor('/mocked-endpoint')).catch(e => e);
 
             expect(result).to.be.instanceof(Error);
             expect(result.message).to.contain('read ECONNRESET');
@@ -47,7 +47,7 @@ describe("Broken response handlers", function () {
         it("should allow leaving connections to time out", async () => {
             await server.forGet('/mocked-endpoint').thenTimeout();
 
-            let result = await Promise.race<any>([
+            const result = await Promise.race<any>([
                 fetch(server.urlFor('/mocked-endpoint')),
                 delay(100).then(() => 'timed out')
             ])
@@ -59,7 +59,7 @@ describe("Broken response handlers", function () {
 
     describe("for HTTPS requests", () => {
 
-        let server = getLocal({
+        const server = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'

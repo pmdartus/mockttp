@@ -5,7 +5,7 @@ export async function filter<T>(
     array: T[],
     test: (t: T) => MaybePromise<boolean>
 ): Promise<T[]> {
-    let testResults = await Promise.all(array.map(test));
+    const testResults = await Promise.all(array.map(test));
     return array.filter((v, i) => testResults[i]);
 }
 
@@ -20,7 +20,7 @@ export type Deferred<T> = Promise<T> & {
 export function getDeferred<T>(): Deferred<T> {
     let resolveCallback: (value: T) => void;
     let rejectCallback: (e: Error) => void;
-    let result = <Deferred<T>> new Promise((resolve, reject) => {
+    const result = <Deferred<T>> new Promise((resolve, reject) => {
         resolveCallback = resolve;
         rejectCallback = reject;
     });

@@ -4,8 +4,8 @@ import { expect, nodeOnly, isNode } from '../test-utils';
 
 describe("Port selection", function () {
 
-    let server1 = getLocal();
-    let server2 = getLocal();
+    const server1 = getLocal();
+    const server2 = getLocal();
 
     afterEach(() => Promise.all([
         server1.stop().catch(() => {}),

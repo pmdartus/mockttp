@@ -65,7 +65,7 @@ export class RequestRule implements RequestRule {
     }
 
     handle(req: OngoingRequest, res: OngoingResponse, record: boolean): Promise<void> {
-        let handlerPromise = (async () => { // Catch (a)sync errors
+        const handlerPromise = (async () => { // Catch (a)sync errors
             return this.handler.handle(req, res);
         })();
 

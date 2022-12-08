@@ -28,14 +28,14 @@ const INITIAL_ENV = _.cloneDeep(process.env);
 nodeOnly(() => {
     describe("Mockttp when used as an HTTPS proxy", function () {
 
-        let server = getLocal({
+        const server = getLocal({
             https: {
                 keyPath: './test/fixtures/test-ca.key',
                 certPath: './test/fixtures/test-ca.pem'
             }
         });
 
-        let remoteServer = getLocal();
+        const remoteServer = getLocal();
 
         beforeEach(async () => {
             await remoteServer.start();
@@ -53,14 +53,14 @@ nodeOnly(() => {
             it("should mock proxied HTTP", async () => {
                 await server.forGet("http://example.com/endpoint").thenReply(200, "mocked data");
 
-                let response = await request.get("http://example.com/endpoint");
+                const response = await request.get("http://example.com/endpoint");
                 expect(response).to.equal("mocked data");
             });
 
             it("should mock proxied HTTPS", async () => {
                 await server.forGet("https://example.com/endpoint").thenReply(200, "mocked data");
 
-                let response = await request.get("https://example.com/endpoint");
+                const response = await request.get("https://example.com/endpoint");
                 expect(response).to.equal("mocked data");
             });
 
@@ -78,7 +78,7 @@ nodeOnly(() => {
             it("should mock proxied HTTPS with a specific port", async () => {
                 await server.forGet("https://example.com:1234/endpoint").thenReply(200, "mocked data");
 
-                let response = await request.get("https://example.com:1234/endpoint");
+                const response = await request.get("https://example.com:1234/endpoint");
                 expect(response).to.equal("mocked data");
             });
 
@@ -87,7 +87,7 @@ nodeOnly(() => {
 
                 await server.forAnyRequest().thenPassThrough();
 
-                let response = await ignoreNetworkError( // External service, can be unreliable, c'est la vie
+                const response = await ignoreNetworkError( // External service, can be unreliable, c'est la vie
                     request.get("https://check.ja3.zone/", {
                         headers: {
                             // The hash may be recorded with the user agent that's used - we don't want the database
@@ -131,7 +131,7 @@ nodeOnly(() => {
 
                     await server.forAnyRequest().thenPassThrough();
 
-                    let response = await request.get(badServer.url, {
+                    const response = await request.get(badServer.url, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -143,7 +143,7 @@ nodeOnly(() => {
                     await badServer.forAnyRequest().thenReply(200);
                     await server.forAnyRequest().thenPassThrough();
 
-                    let responsePromise = getDeferred<CompletedResponse>();
+                    const responsePromise = getDeferred<CompletedResponse>();
                     await server.on('response', (r) => responsePromise.resolve(r));
 
                     await request.get(badServer.url).catch(() => {});
@@ -161,7 +161,7 @@ nodeOnly(() => {
                         ignoreHostHttpsErrors: ['localhost']
                     });
 
-                    let response = await request.get(badServer.url, {
+                    const response = await request.get(badServer.url, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -176,7 +176,7 @@ nodeOnly(() => {
                         ignoreHostHttpsErrors: ['differenthost']
                     });
 
-                    let response = await request.get(badServer.url, {
+                    const response = await request.get(badServer.url, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -191,7 +191,7 @@ nodeOnly(() => {
                         trustAdditionalCAs: [{ cert }]
                     });
 
-                    let response = await request.get(badServer.url, {
+                    const response = await request.get(badServer.url, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -206,7 +206,7 @@ nodeOnly(() => {
                         trustAdditionalCAs: [{ certPath }]
                     });
 
-                    let response = await request.get(badServer.url, {
+                    const response = await request.get(badServer.url, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -254,7 +254,7 @@ nodeOnly(() => {
                 it("should refuse to pass through requests", async () => {
                     await server.forAnyRequest().thenPassThrough();
 
-                    let response = await request.get(`https://localhost:${oldServerPort}`, {
+                    const response = await request.get(`https://localhost:${oldServerPort}`, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -268,7 +268,7 @@ nodeOnly(() => {
                         simulateConnectionErrors: true
                     });
 
-                    let result = await request.get(`https://localhost:${oldServerPort}`, {
+                    const result = await request.get(`https://localhost:${oldServerPort}`, {
                         resolveWithFullResponse: true,
                         simple: false
                     }).catch(e => e);
@@ -284,7 +284,7 @@ nodeOnly(() => {
                 it("should tag failed requests", async () => {
                     await server.forAnyRequest().thenPassThrough();
 
-                    let responsePromise = getDeferred<CompletedResponse>();
+                    const responsePromise = getDeferred<CompletedResponse>();
                     await server.on('response', (r) => responsePromise.resolve(r));
 
                     await request.get(`https://localhost:${oldServerPort}`).catch(() => {});
@@ -301,7 +301,7 @@ nodeOnly(() => {
                         ignoreHostHttpsErrors: ['localhost']
                     });
 
-                    let response = await request.get(`https://localhost:${oldServerPort}`, {
+                    const response = await request.get(`https://localhost:${oldServerPort}`, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -314,7 +314,7 @@ nodeOnly(() => {
                         ignoreHostHttpsErrors: ['differenthost']
                     });
 
-                    let response = await request.get(`https://localhost:${oldServerPort}`, {
+                    const response = await request.get(`https://localhost:${oldServerPort}`, {
                         resolveWithFullResponse: true,
                         simple: false
                     });
@@ -365,7 +365,7 @@ nodeOnly(() => {
                         }
                     });
 
-                    let response = await request.get(`https://localhost:${authenticatingServerPort}/`);
+                    const response = await request.get(`https://localhost:${authenticatingServerPort}/`);
 
                     expect(response).to.equal("OK");
                 });

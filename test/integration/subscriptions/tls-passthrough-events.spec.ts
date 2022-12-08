@@ -5,7 +5,7 @@ import { delay, getDeferred, fetch, isNode } from "../../test-utils";
 
 describe("TLS passthrough subscriptions", () => {
 
-    let server = getLocal({
+    const server = getLocal({
         https: {
             keyPath: './test/fixtures/test-ca.key',
             certPath: './test/fixtures/test-ca.pem',

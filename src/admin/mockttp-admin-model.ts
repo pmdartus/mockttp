@@ -142,7 +142,7 @@ export function buildAdminServerModel(
             },
 
             mockedEndpoint: async (__: any, { id }: { id: string }): Promise<MockedEndpointData | null> => {
-                let endpoint = _.find(await mockServer.getMockedEndpoints(), (endpoint: MockedEndpoint) => {
+                const endpoint = _.find(await mockServer.getMockedEndpoints(), (endpoint: MockedEndpoint) => {
                     return endpoint.id === id;
                 });
 
